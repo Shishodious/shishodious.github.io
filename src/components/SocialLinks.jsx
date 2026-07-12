@@ -1,6 +1,8 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { HiOutlineDocumentArrowDown } from "react-icons/hi2";
+import { useLiquidGlass } from "./effects/liquid-glass/useLiquidGlass";
+import "./effects/liquid-glass/liquid-glass.css";
 
 const links = [
   {
@@ -31,9 +33,15 @@ const links = [
 ];
 
 const SocialLinks = () => {
+  // Narrow vertical pill → gentle refraction, radius matches the CSS below.
+  const glassRef = useLiquidGlass({ radius: 20, scale: -80, chroma: 5, blur: 2, border: 0.12 });
+
   return (
-    <aside className="fixed hidden lg:flex flex-col items-center gap-4 bottom-0 left-4 z-40">
-      <ul className="flex flex-col gap-4">
+    <aside className="fixed hidden lg:flex flex-col items-center gap-4 bottom-8 left-4 z-40">
+      <ul
+        ref={glassRef}
+        className="lg-surface flex flex-col gap-4 rounded-[26px] px-3 py-5"
+      >
         {links.map(({ id, label, icon, href, download }) => (
           <li key={id}>
             <a

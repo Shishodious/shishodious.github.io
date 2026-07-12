@@ -1,0 +1,29 @@
+/*
+ * Glass "dressing" — the parts the SVG filter does NOT do.
+ *
+ * The engine bends light at the rim; this supplies the translucent tint, the
+ * rounded corner, and the inset highlights/shadow that read as a physical pane.
+ * Tuned for this project's warm-dark backdrop (bg #0d0c0a).
+ */
+
+.lg-surface {
+  position: relative;
+  /* Translucent so backdrop-filter has something to refract. */
+  background: linear-gradient(180deg, rgba(20, 18, 15, 0.22), rgba(20, 18, 15, 0.38));
+  box-shadow:
+    /* Cast shadow — lifts the pane off the page. */
+    0 18px 44px rgba(0, 0, 0, 0.45),
+    /* Top inner highlight — the lit top bevel. */
+    inset 0 1px 1px rgba(255, 255, 255, 0.42),
+    /* Bottom inner glare — soft light pooling at the base. */
+    inset 0 -8px 18px rgba(255, 255, 255, 0.05),
+    /* Hairline rim — defines the glass edge. */
+    inset 0 0 0 1px rgba(237, 232, 223, 0.12);
+}
+
+/* Applied automatically by the engine on Safari/Firefox, where the SVG
+   refraction no-ops and a frosted blur stands in. Nudge the tint up so the
+   frosted fallback still reads as a distinct pane. */
+.lg-surface.lg-fallback {
+  background: linear-gradient(180deg, rgba(20, 18, 15, 0.34), rgba(20, 18, 15, 0.5));
+}
