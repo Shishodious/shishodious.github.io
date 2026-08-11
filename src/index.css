@@ -137,6 +137,93 @@ body {
   pointer-events: none;
 }
 
+/* ——— Hero 2.5D depth backdrop ——— */
+.hero-backdrop {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.hero-plane {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.hero-plane img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* The source is a portrait frame, so on wide viewports `object-position`
+     has no horizontal slack left to give. Nudging the planes bodily instead
+     keeps the subject clear of the right-aligned headline. */
+  --plane-shift: -5%;
+}
+
+/* Far field — hazy, slightly cooled back, and the only unmasked plate, so it
+   always fills the frame no matter how far the near planes travel. */
+.hero-plane--far img {
+  transform: translateX(var(--plane-shift)) scale(1.2);
+  filter: blur(2px) brightness(0.94) saturate(0.9);
+}
+
+/* The subject sits on the focal plane: sharp, masked to a soft oval so it
+   lifts off the far field without a visible cut line. */
+.hero-plane--mid img {
+  transform: translateX(var(--plane-shift)) scale(1.2);
+  filter: contrast(1.04) saturate(1.04);
+}
+.hero-plane--mid {
+  -webkit-mask-image: radial-gradient(
+    58% 52% at 42% 50%,
+    #000 30%,
+    rgba(0, 0, 0, 0.72) 58%,
+    rgba(0, 0, 0, 0.22) 82%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    58% 52% at 42% 50%,
+    #000 30%,
+    rgba(0, 0, 0, 0.72) 58%,
+    rgba(0, 0, 0, 0.22) 82%,
+    transparent 100%
+  );
+}
+
+/* Near grass — biggest swing, and blurred like real foreground bokeh, which
+   also dissolves any doubling against the planes behind it. */
+.hero-plane--near img {
+  transform: translateX(var(--plane-shift)) scale(1.34);
+  filter: blur(4px) brightness(1.04);
+}
+.hero-plane--near {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 44%,
+    rgba(0, 0, 0, 0.35) 60%,
+    rgba(0, 0, 0, 0.8) 76%,
+    #000 92%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 44%,
+    rgba(0, 0, 0, 0.35) 60%,
+    rgba(0, 0, 0, 0.8) 76%,
+    #000 92%
+  );
+}
+
+.hero-vignette {
+  background: radial-gradient(
+    118% 88% at 50% 44%,
+    transparent 38%,
+    rgba(13, 12, 10, 0.42) 78%,
+    rgba(13, 12, 10, 0.78) 100%
+  );
+}
+
 /* ——— Custom scrollbar for inner overflow ——— */
 .custom-scroll::-webkit-scrollbar {
   width: 3px;

@@ -3,8 +3,8 @@ import { Link } from "react-scroll";
 import gsap from "gsap";
 import RotatingText from "./RotatingText";
 import VariableProximity from "./VariableProximity";
+import HeroBackdrop from "./HeroBackdrop";
 import { HiOutlineArrowDown, HiOutlineArrowUpRight } from "react-icons/hi2";
-import me from "../assets/me.jpg";
 
 const marqueeItems = [
   "React",
@@ -79,21 +79,8 @@ const Home = () => {
       ref={homeRef}
       className="relative min-h-screen bg-bg text-ink overflow-hidden"
     >
-      {/* Full-bleed photo, graded into the palette */}
-      <div ref={imageRef} className="absolute inset-0 z-0">
-        <img
-          src={me}
-          alt="Priyanshu Shishodia watching a sunset"
-          // eslint-disable-next-line react/no-unknown-property -- React 18 expects lowercase `fetchpriority`; camelCase triggers a runtime warning
-          fetchpriority="high"
-          className="w-full h-full object-cover"
-          style={{ objectPosition: "62% 35%" }}
-        />
-        {/* Warm grade + legibility gradients */}
-        <div className="absolute inset-0 bg-accent/10 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg/80 via-bg/10 to-bg" />
-        <div className="absolute inset-0 bg-gradient-to-l from-bg/60 via-bg/20 to-transparent" />
-      </div>
+      {/* Full-bleed photo split into depth planes, graded into the palette */}
+      <HeroBackdrop imageRef={imageRef} />
 
       {/* Foreground content */}
       <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 min-h-screen flex flex-col items-end justify-center text-right pt-24 pb-36">
