@@ -12,24 +12,30 @@ const services = [
   },
   {
     id: "02",
+    title: "AI-Integrated Products",
+    description:
+      "Language and vision models wired into real product surfaces — multimodal pipelines, embeddings and vector search, structured extraction from messy input, and queue-driven processing built for production volume.",
+  },
+  {
+    id: "03",
     title: "Backend & API Systems",
     description:
       "REST APIs with authentication, role-based access, job queues, and system design that holds up as usage grows.",
   },
   {
-    id: "03",
+    id: "04",
     title: "Realtime Applications",
     description:
       "Live chat, tracking, and notifications over WebSockets — engineered for concurrent users, not demos.",
   },
   {
-    id: "04",
+    id: "05",
     title: "E-commerce Builds",
     description:
       "Storefronts with product management, carts, and order processing wired to real business logic.",
   },
   {
-    id: "05",
+    id: "06",
     title: "Automation & Scraping",
     description:
       "Structured data extraction at scale — rate-limited, retry-safe crawlers exposed through clean APIs.",

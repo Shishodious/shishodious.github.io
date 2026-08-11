@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Drawn as paths, not text: favicons never load webfonts, so a <text> tag
+       would fall back to whatever grotesk the OS happens to have. -->
+  <rect width="64" height="64" rx="14" fill="#0d0c0a"/>
+  <path
+    d="M13 12 H31 A11 11 0 0 1 31 34 H22 V52 H13 Z
+       M22 18.5 H30 A4.5 4.5 0 0 1 30 27.5 H22 Z"
+    fill="#ede8df"
+    fill-rule="evenodd"
+  />
+  <circle cx="46" cy="47" r="5.5" fill="#ff5c28"/>
+</svg>

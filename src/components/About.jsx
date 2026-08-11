@@ -76,6 +76,13 @@ const About = () => {
               queue-driven jobs with BullMQ, PostgreSQL, and AWS
               infrastructure running in production.
             </p>
+            <p className="mt-6 text-muted text-base md:text-lg leading-[1.9] font-light">
+              I build <span className="text-ink">with</span> AI as much as I
+              build <span className="text-ink">on</span> it — models sit in my
+              daily loop for scaffolding, review, and the tedious middle of a
+              build. It&apos;s less a skill I list than the reason I ship at
+              the pace I do.
+            </p>
           </div>
           <div className="md:col-span-5 about-reveal">
             <p className="text-muted text-base md:text-lg leading-[1.9] font-light">

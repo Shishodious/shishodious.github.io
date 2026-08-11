@@ -20,7 +20,7 @@ await page.goto("file://" + path.join(here, "covers.html"), {
 await page.evaluateHandle("document.fonts.ready");
 await new Promise((r) => setTimeout(r, 800));
 
-for (const id of ["creatorvision", "videotube", "chatapp", "uber", "oversocs", "autocrawler"]) {
+for (const id of ["momentum", "creatorvision", "videotube", "chatapp", "uber", "oversocs", "autocrawler"]) {
   const el = await page.$(`#${id}`);
   await el.screenshot({ path: `/tmp/cover-${id}.png` });
   console.log("rendered", id);

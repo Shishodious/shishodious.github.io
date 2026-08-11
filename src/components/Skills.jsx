@@ -12,6 +12,17 @@ const groups = [
     items: ["Node.js", "Express", "NestJS", "REST APIs", "WebSockets"],
   },
   {
+    category: "AI & Automation",
+    items: [
+      "LLM APIs",
+      "Google Gemini",
+      "pgvector",
+      "Vector Search",
+      "OCR & Transcription",
+      "Puppeteer",
+    ],
+  },
+  {
     category: "Data & Cloud",
     items: ["PostgreSQL", "MongoDB", "Redis", "AWS", "Strapi"],
   },

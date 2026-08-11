@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FiGithub } from "react-icons/fi";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
+import momentum from "../assets/momentum.jpg";
 import creatorvision from "../assets/creatorvision.jpg";
 import videotube from "../assets/videotube.jpg";
 import uber from "../assets/uber.jpg";
@@ -13,6 +14,16 @@ import autocrawler from "../assets/autocrawler.jpg";
 const projects = [
   {
     id: "01",
+    src: momentum,
+    title: "Momentum",
+    description:
+      "AI marketing engine built at Hypeliv — turns a plain-language brief into on-brand images, short-form reels, UGC presenter videos, and carousels, then schedules and auto-publishes them straight to Instagram, LinkedIn, YouTube, and TikTok. NestJS backend spanning ~55 modules with BullMQ workers, a multi-provider model layer (Anthropic, Google GenAI, ElevenLabs) behind per-provider spend tracking, and a Next.js 16 admin surface for brand context, planning, and publishing.",
+    tags: ["Next.js", "NestJS", "Drizzle", "PostgreSQL", "BullMQ", "Anthropic", "Google GenAI"],
+    demoLink: "https://momentum.hypeliv.com",
+    codeLink: null,
+  },
+  {
+    id: "02",
     src: creatorvision,
     title: "Creator Vision",
     description:
@@ -22,7 +33,7 @@ const projects = [
     codeLink: null,
   },
   {
-    id: "02",
+    id: "03",
     src: autocrawler,
     title: "AutoCrawler",
     description:
@@ -32,7 +43,7 @@ const projects = [
     codeLink: "https://github.com/prishushishodia/AutoCrawler",
   },
   {
-    id: "03",
+    id: "04",
     src: chatapp,
     title: "Chat-App",
     description:
@@ -42,7 +53,7 @@ const projects = [
     codeLink: "https://github.com/prishushishodia/ChatAPP-Client",
   },
   {
-    id: "04",
+    id: "05",
     src: videotube,
     title: "VideoTube",
     description:
@@ -52,7 +63,7 @@ const projects = [
     codeLink: "https://github.com/prishushishodia/VideoTube",
   },
   {
-    id: "05",
+    id: "06",
     src: oversocs,
     title: "Oversocs",
     description:
@@ -62,7 +73,7 @@ const projects = [
     codeLink: "https://github.com/prishushishodia/OVERSOCS",
   },
   {
-    id: "06",
+    id: "07",
     src: uber,
     title: "Uber Clone",
     description:
