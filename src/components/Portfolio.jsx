@@ -40,7 +40,7 @@ const projects = [
       "Web scraping and automation tool — structured data extraction at scale with rate limiting, retries, and a UI to configure crawls and inspect results.",
     tags: ["Node.js", "Puppeteer", "REST API"],
     demoLink: "https://auto-crawler.vercel.app",
-    codeLink: "https://github.com/prishushishodia/AutoCrawler",
+    codeLink: "https://github.com/Shishodious/AutoCrawler",
   },
   {
     id: "04",
@@ -50,7 +50,7 @@ const projects = [
       "Realtime one-on-one and group messaging with instant delivery, file sharing, and a UI tested with 100+ concurrent users.",
     tags: ["Socket.io", "React", "Node.js"],
     demoLink: "https://chat-app-client-two-gamma.vercel.app/",
-    codeLink: "https://github.com/prishushishodia/ChatAPP-Client",
+    codeLink: "https://github.com/Shishodious/ChatAPP-Client",
   },
   {
     id: "05",
@@ -60,7 +60,7 @@ const projects = [
       "Full-stack video-sharing platform (YouTube clone) — users register, upload videos to Cloudinary with auto-thumbnails, then watch, search, like, comment, subscribe, and build playlists. Monorepo with an Express/MongoDB REST API and a React 19 SPA, secured by JWT access/refresh tokens.",
     tags: ["React", "Node.js", "Express", "MongoDB", "Cloudinary", "JWT"],
     demoLink: "https://video-tube-server-blush.vercel.app/",
-    codeLink: "https://github.com/prishushishodia/VideoTube",
+    codeLink: "https://github.com/Shishodious/VideoTube",
   },
   {
     id: "06",
@@ -70,7 +70,7 @@ const projects = [
       "E-commerce for exclusive socks — filtered product listings serving 500+ daily visitors, secure auth with cart and checkout, GSAP and Framer Motion micro-interactions.",
     tags: ["React", "Node.js", "GSAP", "Framer Motion"],
     demoLink: "https://oversocs-d86z.vercel.app/",
-    codeLink: "https://github.com/prishushishodia/OVERSOCS",
+    codeLink: "https://github.com/Shishodious/OVERSOCS",
   },
   {
     id: "07",
@@ -80,7 +80,7 @@ const projects = [
       "Full-stack ride-booking platform — live trip tracking over WebSockets for rider and driver roles, Google Maps routing with fare calculation, JWT-protected routes throughout.",
     tags: ["React", "Maps API", "WebSockets", "JWT"],
     demoLink: "https://uber-zeta-woad.vercel.app/",
-    codeLink: "https://github.com/prishushishodia/UBER",
+    codeLink: "https://github.com/Shishodious/UBER",
   },
 ];
 
@@ -225,7 +225,7 @@ const Portfolio = () => {
         {/* GitHub CTA */}
         <div className="mt-20 md:mt-28 flex justify-center">
           <a
-            href="https://github.com/prishushishodia"
+            href="https://github.com/Shishodious"
             target="_blank"
             rel="noreferrer"
             className="u-link font-mono text-xs tracking-[0.25em] uppercase text-muted hover:text-ink transition-colors duration-300"

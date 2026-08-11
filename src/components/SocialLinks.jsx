@@ -15,7 +15,7 @@ const links = [
     id: 2,
     label: "GitHub",
     icon: <FaGithub size={16} />,
-    href: "https://github.com/prishushishodia",
+    href: "https://github.com/Shishodious",
   },
   {
     id: 3,

@@ -91,7 +91,7 @@ const Contact = () => {
                 {
                   label: "GitHub",
                   icon: <FaGithub size={15} />,
-                  href: "https://github.com/prishushishodia",
+                  href: "https://github.com/Shishodious",
                 },
               ].map(({ label, icon, href }) => (
                 <a
