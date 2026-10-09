@@ -30,7 +30,10 @@ export default function VariableProximity({
   radius = 140,
   falloff = "linear",
 }) {
-  const chars = useMemo(() => label.split(""), [label]);
+  // Letters are grouped into words that can't break internally — each letter
+  // is its own inline-block, which would otherwise let a narrow screen wrap
+  // mid-word ("thin / g.").
+  const words = useMemo(() => label.split(" ").map((w) => w.split("")), [label]);
   const letterRefs = useRef([]);
 
   useEffect(() => {
@@ -94,21 +97,32 @@ export default function VariableProximity({
     };
   }, [containerRef, fromFontVariationSettings, toFontVariationSettings, radius, falloff]);
 
+  let index = 0;
+
   return (
     <span className={className} style={style} aria-label={label}>
-      {chars.map((char, i) => (
-        <span
-          key={i}
-          ref={(el) => {
-            letterRefs.current[i] = el;
-          }}
-          style={{
-            fontVariationSettings: fromFontVariationSettings,
-            display: "inline-block",
-          }}
-          aria-hidden="true"
-        >
-          {char === " " ? " " : char}
+      {words.map((letters, w) => (
+        <span key={w}>
+          {w > 0 && " "}
+          <span className="inline-block whitespace-nowrap" aria-hidden="true">
+            {letters.map((char) => {
+              const i = index++;
+              return (
+                <span
+                  key={i}
+                  ref={(el) => {
+                    letterRefs.current[i] = el;
+                  }}
+                  style={{
+                    fontVariationSettings: fromFontVariationSettings,
+                    display: "inline-block",
+                  }}
+                >
+                  {char}
+                </span>
+              );
+            })}
+          </span>
         </span>
       ))}
     </span>

@@ -109,7 +109,7 @@ const About = () => {
             <div
               key={label}
               className={`about-reveal py-8 md:py-12 ${
-                i > 0 ? "border-l border-line pl-6 md:pl-12" : ""
+                i > 0 ? "border-l border-line pl-4 sm:pl-6 md:pl-12" : ""
               }`}
             >
               <span
@@ -118,7 +118,7 @@ const About = () => {
               >
                 {value}
               </span>
-              <span className="mt-2 block font-mono text-[10px] md:text-xs tracking-[0.2em] text-muted uppercase">
+              <span className="mt-2 block font-mono text-[10px] md:text-xs tracking-[0.12em] sm:tracking-[0.2em] text-muted uppercase">
                 {label}
               </span>
             </div>
