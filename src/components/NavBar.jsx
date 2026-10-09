@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { HiMiniBars2, HiXMark } from "react-icons/hi2";
 import { Link } from "react-scroll";
+import Lean from "./effects/Lean";
 
 const links = [
   { id: 1, link: "about", label: "About" },
@@ -11,9 +12,50 @@ const links = [
   { id: 6, link: "contact", label: "Contact" },
 ];
 
+// The active pill overshoots a touch on arrival; the hover ghost just glides.
+const SLIDE =
+  "transform 0.55s cubic-bezier(0.34, 1.36, 0.64, 1), width 0.55s cubic-bezier(0.34, 1.36, 0.64, 1)";
+const GLIDE =
+  "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), width 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
+const FADE = "opacity 0.3s ease";
+
+const HIDDEN = { x: 0, w: 0, on: false, snap: true };
+
 const NavBar = () => {
   const [nav, setNav] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Desktop links sit on a track; one pill marks the section in view, a fainter
+  // one follows the pointer. Both are positioned from the links' own boxes.
+  const trackRef = useRef(null);
+  const [active, setActive] = useState(null);
+  const [hovered, setHovered] = useState(null);
+  const [pill, setPill] = useState(HIDDEN);
+  const [ghost, setGhost] = useState(HIDDEN);
+  const [layoutTick, setLayoutTick] = useState(0);
+
+  // Web fonts and resizes change link widths, so re-measure after either.
+  useEffect(() => {
+    const bump = () => setLayoutTick((t) => t + 1);
+    document.fonts?.ready.then(bump);
+    window.addEventListener("resize", bump);
+    return () => window.removeEventListener("resize", bump);
+  }, []);
+
+  useLayoutEffect(() => {
+    const measure = (key) => {
+      const el = key && trackRef.current?.querySelector(`[data-nav="${key}"]`);
+      return el ? { x: el.offsetLeft, w: el.offsetWidth } : null;
+    };
+    // A pill appearing from nothing fades in where it lands (`snap`) instead
+    // of sliding over from wherever it was last hidden.
+    const place = (key) => (prev) => {
+      const box = measure(key);
+      return box ? { ...box, on: true, snap: !prev.on } : { ...prev, on: false };
+    };
+    setPill(place(active));
+    setGhost(place(hovered));
+  }, [active, hovered, layoutTick]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -48,29 +90,75 @@ const NavBar = () => {
       </Link>
 
       {/* Desktop menu */}
-      <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-        {links.map(({ id, link, label }) => (
-          <Link
-            key={id}
-            to={link}
-            smooth
-            duration={600}
-            spy
-            offset={-70}
-            activeClass="is-active text-ink"
-            className="u-link cursor-pointer font-mono text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-300"
-          >
-            <span className="text-accent/80 mr-1.5">0{id}</span>
-            {label}
-          </Link>
-        ))}
-        <a
-          href="/Resume.pdf"
-          download="Priyanshu-Shishodia-Resume.pdf"
-          className="ml-2 px-5 py-2 font-mono text-[11px] tracking-[0.2em] uppercase border border-ink/20 rounded-full hover:border-accent hover:text-accent transition-all duration-300"
+      <nav className="hidden lg:flex items-center gap-4 xl:gap-5">
+        <div
+          ref={trackRef}
+          onMouseLeave={() => setHovered(null)}
+          className="relative flex items-center p-1 rounded-full border border-line bg-bg/30 backdrop-blur-md"
         >
-          Resume
-        </a>
+          <span
+            aria-hidden="true"
+            className="absolute top-1 bottom-1 left-0 rounded-full bg-ink/[0.07] pointer-events-none"
+            style={{
+              width: ghost.w,
+              transform: `translateX(${ghost.x}px)`,
+              opacity: ghost.on ? 1 : 0,
+              transition: ghost.snap ? FADE : `${GLIDE}, ${FADE}`,
+            }}
+          />
+          <span
+            aria-hidden="true"
+            className="absolute top-1 bottom-1 left-0 rounded-full bg-accent pointer-events-none"
+            style={{
+              width: pill.w,
+              transform: `translateX(${pill.x}px)`,
+              opacity: pill.on ? 1 : 0,
+              transition: pill.snap ? FADE : `${SLIDE}, ${FADE}`,
+            }}
+          />
+          {links.map(({ id, link, label }) => {
+            const isActive = active === link;
+            return (
+              <Link
+                key={id}
+                to={link}
+                href={`#${link}`}
+                data-nav={link}
+                smooth
+                duration={600}
+                spy
+                offset={-70}
+                onSetActive={(to) => setActive(to)}
+                onSetInactive={(to) => setActive((a) => (a === to ? null : a))}
+                onMouseEnter={() => setHovered(link)}
+                onFocus={() => setHovered(link)}
+                onBlur={() => setHovered(null)}
+                aria-current={isActive ? "true" : undefined}
+                className={`relative z-10 cursor-pointer px-3.5 xl:px-4 py-2 rounded-full font-mono text-[11px] tracking-[0.2em] uppercase whitespace-nowrap outline-none focus-visible:ring-1 focus-visible:ring-accent/60 transition-colors duration-300 ${
+                  isActive ? "text-bg delay-100" : "text-muted hover:text-ink"
+                }`}
+              >
+                <span
+                  className={`mr-1.5 transition-colors duration-300 ${
+                    isActive ? "text-bg/60 delay-100" : "text-accent/80"
+                  }`}
+                >
+                  0{id}
+                </span>
+                {label}
+              </Link>
+            );
+          })}
+        </div>
+        <Lean>
+          <a
+            href="/Resume.pdf"
+            download="Priyanshu-Shishodia-Resume.pdf"
+            className="px-5 py-2.5 font-mono text-[11px] tracking-[0.2em] uppercase border border-ink/20 rounded-full hover:border-accent hover:text-accent transition-colors duration-300"
+          >
+            Resume
+          </a>
+        </Lean>
       </nav>
 
       {/* Mobile menu toggle */}

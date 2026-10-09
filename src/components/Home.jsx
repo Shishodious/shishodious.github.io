@@ -4,6 +4,7 @@ import gsap from "gsap";
 import RotatingText from "./RotatingText";
 import VariableProximity from "./VariableProximity";
 import HeroBackdrop from "./HeroBackdrop";
+import Lean from "./effects/Lean";
 import { HiOutlineArrowDown, HiOutlineArrowUpRight } from "react-icons/hi2";
 
 const marqueeItems = [
@@ -148,28 +149,32 @@ const Home = () => {
 
         {/* CTAs */}
         <div ref={ctaRef} className="mt-12 flex flex-wrap items-center justify-end gap-6">
-          <Link
-            to="portfolio"
-            smooth
-            duration={700}
-            offset={-70}
-            className="group cursor-pointer inline-flex items-center gap-2 px-7 py-3.5 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide hover:bg-ink transition-colors duration-300"
-          >
-            Selected work
-            <HiOutlineArrowUpRight
-              size={15}
-              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
-          </Link>
-          <Link
-            to="contact"
-            smooth
-            duration={700}
-            offset={-70}
-            className="u-link cursor-pointer font-mono text-sm tracking-[0.15em] text-ink uppercase"
-          >
-            Get in touch
-          </Link>
+          <Lean>
+            <Link
+              to="portfolio"
+              smooth
+              duration={700}
+              offset={-70}
+              className="group cursor-pointer inline-flex items-center gap-2 px-7 py-3.5 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide hover:bg-ink transition-colors duration-300"
+            >
+              Selected work
+              <HiOutlineArrowUpRight
+                size={15}
+                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </Link>
+          </Lean>
+          <Lean tilt={4}>
+            <Link
+              to="contact"
+              smooth
+              duration={700}
+              offset={-70}
+              className="u-link cursor-pointer font-mono text-sm tracking-[0.15em] text-ink uppercase"
+            >
+              Get in touch
+            </Link>
+          </Lean>
         </div>
       </div>
 

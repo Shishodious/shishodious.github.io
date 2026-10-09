@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const experiences = [
   {
     company: "Hypeliv",
-    role: "Full Stack Developer Intern — Current",
+    role: "Software Engineer — Current",
     summary:
       "Engineered and delivered a production website for a US-based client using React with a headless CMS backend.",
     points: [
