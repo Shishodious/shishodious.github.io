@@ -454,7 +454,7 @@ const ProjectGrid = () => {
                 </a>
 
                 {/* Meta */}
-                <div className="mt-6 flex items-start justify-between gap-4">
+                <div className="mt-6 flex flex-col sm:flex-row items-start sm:justify-between gap-4">
                   <div>
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs text-accent">/{id}</span>
@@ -488,12 +488,12 @@ const ProjectGrid = () => {
                       rel="noreferrer"
                       title="Source code"
                       aria-label={`${title} source code`}
-                      className="shrink-0 mt-1 p-3 border border-line rounded-full text-muted hover:text-accent hover:border-accent/40 transition-all duration-300"
+                      className="shrink-0 sm:mt-1 p-3 border border-line rounded-full text-muted hover:text-accent hover:border-accent/40 transition-all duration-300"
                     >
                       <FiGithub size={17} />
                     </a>
                   ) : (
-                    <span className="shrink-0 mt-2 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-accent border border-accent/30 rounded-full whitespace-nowrap">
+                    <span className="shrink-0 sm:mt-2 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-accent border border-accent/30 rounded-full whitespace-nowrap">
                       Client work
                     </span>
                   )}

@@ -94,7 +94,7 @@ const Skills = () => {
               <span className="md:col-span-3 font-mono text-xs tracking-[0.25em] text-muted uppercase">
                 {category}
               </span>
-              <div className="md:col-span-9 flex flex-wrap gap-x-3 gap-y-2 items-baseline">
+              <div className="md:col-span-9 flex flex-wrap gap-x-5 sm:gap-x-3 gap-y-2 items-baseline">
                 {items.map((item, i) => (
                   <span key={item} className="flex items-baseline gap-3">
                     <span
@@ -104,7 +104,7 @@ const Skills = () => {
                       {item}
                     </span>
                     {i < items.length - 1 && (
-                      <span className="text-accent/50 text-xs select-none">◆</span>
+                      <span className="hidden sm:inline text-accent/50 text-xs select-none">◆</span>
                     )}
                   </span>
                 ))}
