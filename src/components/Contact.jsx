@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
+import Lean from "./effects/Lean";
 
 const Contact = () => {
   const sectionRef = useRef(null);
@@ -164,17 +165,19 @@ const Contact = () => {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide
-                           hover:bg-ink transition-colors duration-300"
-              >
-                Send message
-                <HiOutlineArrowUpRight
-                  size={15}
-                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </button>
+              <Lean>
+                <button
+                  type="submit"
+                  className="group inline-flex items-center gap-2 px-8 py-4 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide
+                             hover:bg-ink transition-colors duration-300"
+                >
+                  Send message
+                  <HiOutlineArrowUpRight
+                    size={15}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </button>
+              </Lean>
             </form>
           </div>
         </div>

@@ -1,8 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FiGithub } from "react-icons/fi";
-import { HiOutlineArrowUpRight } from "react-icons/hi2";
+import {
+  HiOutlineArrowLeft,
+  HiOutlineArrowRight,
+  HiOutlineArrowUpRight,
+} from "react-icons/hi2";
+import Lean from "./effects/Lean";
+import { createBendingReel } from "./effects/bendingReel";
 import momentum from "../assets/momentum.jpg";
 import creatorvision from "../assets/creatorvision.jpg";
 import videotube from "../assets/videotube.jpg";
@@ -84,7 +90,297 @@ const projects = [
   },
 ];
 
-const Portfolio = () => {
+// The reel needs room to breathe and a user who's fine with motion.
+const REEL_QUERY =
+  "(min-width: 768px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)";
+
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = () => setMatches(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
+};
+
+const pad = (n) => String(n).padStart(2, "0");
+
+// `compact` tightens the label-to-heading gap so the pinned reel fits one screen.
+const SectionHeader = ({ className = "", compact, rail, aside }) => (
+  <div className={className}>
+    <div
+      className={`flex items-center gap-4 ${compact ? "mb-6 lg:mb-8" : "mb-14 md:mb-20"}`}
+    >
+      <span className="font-mono text-xs text-accent tracking-[0.2em]">(05)</span>
+      <span className="font-mono text-xs text-muted tracking-[0.3em] uppercase">
+        Selected Work
+      </span>
+      <div className="relative flex-1 h-px bg-line overflow-hidden">{rail}</div>
+      {aside}
+    </div>
+    <h2
+      className="font-grotesk font-light tracking-tight"
+      style={{ fontSize: compact ? "clamp(1.75rem, 3.4vw, 3rem)" : "clamp(1.75rem, 4.2vw, 3.5rem)" }}
+    >
+      Things I&apos;ve <em className="font-fraunces italic text-accent">built</em>.
+    </h2>
+  </div>
+);
+
+const ProjectLinks = ({ title, demoLink, codeLink }) => (
+  <div className="flex flex-wrap items-center gap-3">
+    {demoLink && (
+      <Lean>
+        <a
+          href={demoLink}
+          target="_blank"
+          rel="noreferrer"
+          className="group inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide hover:bg-ink transition-colors duration-300"
+        >
+          Visit live
+          <HiOutlineArrowUpRight
+            size={14}
+            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
+        </a>
+      </Lean>
+    )}
+    {codeLink ? (
+      <a
+        href={codeLink}
+        target="_blank"
+        rel="noreferrer"
+        title="Source code"
+        aria-label={`${title} source code`}
+        className="p-3 border border-line rounded-full text-muted hover:text-accent hover:border-accent/40 transition-all duration-300"
+      >
+        <FiGithub size={16} />
+      </a>
+    ) : (
+      <span className="px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-accent border border-accent/30 rounded-full whitespace-nowrap">
+        Client work
+      </span>
+    )}
+  </div>
+);
+
+const ReelButton = ({ label, disabled, onClick, children }) => (
+  <button
+    type="button"
+    aria-label={label}
+    disabled={disabled}
+    onClick={onClick}
+    className="w-9 h-9 flex items-center justify-center rounded-full border border-line text-muted hover:text-accent hover:border-accent/40 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300"
+  >
+    {children}
+  </button>
+);
+
+/**
+ * Pinned "bending reel": while the section is pinned, scrolling runs the
+ * project strip sideways and the strip bends at the edges (see bendingReel.js).
+ * The caption below follows whichever project is centred; the arrows and a
+ * click on any panel scroll the page to that project's spot in the pin.
+ */
+const ProjectReel = () => {
+  const pinRef = useRef(null);
+  const canvasRef = useRef(null);
+  const railRef = useRef(null);
+  const reelRef = useRef(null);
+  const triggerRef = useRef(null);
+  const activeRef = useRef(0);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reel = createBendingReel(canvasRef.current, {
+      sources: projects.map((p) => p.src),
+      onActiveChange: (i) => {
+        activeRef.current = i;
+        setActive(i);
+      },
+    });
+    reelRef.current = reel;
+
+    const trigger = ScrollTrigger.create({
+      trigger: pinRef.current,
+      start: "top top",
+      // One px of scroll moves the strip one px.
+      end: () => `+=${reel.travel()}`,
+      pin: true,
+      scrub: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        reel.setProgress(self.progress);
+        if (railRef.current) {
+          railRef.current.style.transform = `scaleX(${self.progress})`;
+        }
+      },
+    });
+    triggerRef.current = trigger;
+
+    // Sections above this one mount lazily and settle to their real height
+    // after this pin was measured — re-measure whenever the page grows.
+    let refreshTimer = 0;
+    const pageObserver = new ResizeObserver(() => {
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+    });
+    pageObserver.observe(document.body);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      pageObserver.disconnect();
+      trigger.kill();
+      reel.destroy();
+    };
+  }, []);
+
+  const goTo = (index) => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const i = Math.max(0, Math.min(projects.length - 1, index));
+    const top = trigger.start + (i / (projects.length - 1)) * (trigger.end - trigger.start);
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
+  const panelAt = (e) => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    return reelRef.current?.hitTest(e.clientX - rect.left) ?? -1;
+  };
+
+  // The centred panel opens its live site; any other panel is brought to centre.
+  const onCanvasClick = (e) => {
+    const i = panelAt(e);
+    if (i < 0) return;
+    if (i !== activeRef.current) goTo(i);
+    else if (projects[i].demoLink) window.open(projects[i].demoLink, "_blank", "noopener");
+  };
+
+  const onCanvasMove = (e) => {
+    const i = panelAt(e);
+    const clickable = i >= 0 && (i !== activeRef.current || projects[i].demoLink);
+    canvasRef.current.style.cursor = clickable ? "pointer" : "default";
+  };
+
+  const project = projects[active];
+
+  return (
+    <section className="relative w-full bg-bg text-ink overflow-hidden">
+      <div ref={pinRef} className="relative h-screen flex flex-col overflow-hidden">
+        <span className="section-watermark font-grotesk">05</span>
+
+        <SectionHeader
+          compact
+          className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-24 lg:pt-28"
+          rail={
+            <span
+              ref={railRef}
+              className="absolute inset-0 origin-left bg-accent"
+              style={{ transform: "scaleX(0)" }}
+            />
+          }
+          aside={
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-xs tracking-[0.2em] text-muted tabular-nums">
+                <span className="text-ink">{pad(active + 1)}</span> / {pad(projects.length)}
+              </span>
+              <div className="flex gap-2">
+                <ReelButton
+                  label="Previous project"
+                  disabled={active === 0}
+                  onClick={() => goTo(active - 1)}
+                >
+                  <HiOutlineArrowLeft size={14} />
+                </ReelButton>
+                <ReelButton
+                  label="Next project"
+                  disabled={active === projects.length - 1}
+                  onClick={() => goTo(active + 1)}
+                >
+                  <HiOutlineArrowRight size={14} />
+                </ReelButton>
+              </div>
+            </div>
+          }
+        />
+
+        {/* The reel runs edge to edge, outside the content column */}
+        <div className="relative flex-1 min-h-0 my-5 lg:my-7">
+          <canvas
+            ref={canvasRef}
+            aria-hidden="true"
+            onClick={onCanvasClick}
+            onPointerMove={onCanvasMove}
+            className="absolute inset-0 w-full h-full"
+          />
+        </div>
+
+        {/* Captions for every project share one grid cell, so the block is
+            always as tall as the longest one and the reel above never resizes
+            as the active project changes. Only the centred one is shown. */}
+        <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 pb-8 lg:pb-12">
+          <p className="sr-only" aria-live="polite">
+            {`${project.title}, project ${active + 1} of ${projects.length}`}
+          </p>
+          <div className="grid">
+            {projects.map((p, i) => {
+              const isActive = i === active;
+              return (
+                <div
+                  key={p.id}
+                  aria-hidden={!isActive}
+                  inert={isActive ? undefined : ""}
+                  className={`[grid-area:1/1] grid md:grid-cols-12 gap-5 md:gap-10 ${
+                    isActive ? "reel-caption" : "invisible"
+                  }`}
+                >
+                  <div className="md:col-span-5">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-mono text-xs text-accent">/{p.id}</span>
+                      <h3 className="font-grotesk font-medium text-3xl lg:text-4xl tracking-tight">
+                        {p.title}
+                      </h3>
+                    </div>
+                    <div className="mt-5">
+                      <ProjectLinks {...p} />
+                    </div>
+                  </div>
+                  <div className="md:col-span-7">
+                    <p className="text-muted text-sm lg:text-[15px] font-light leading-[1.75]">
+                      {p.description}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {p.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 font-mono text-[10px] tracking-[0.15em] uppercase text-ink/70 border border-line rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/**
+ * The plain two-column grid — used on small or short screens and when reduced
+ * motion is requested, where a pinned, scroll-driven reel would get in the way.
+ */
+const ProjectGrid = () => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -121,22 +417,7 @@ const Portfolio = () => {
       <span className="section-watermark font-grotesk">05</span>
 
       <div className="max-w-[1400px] mx-auto relative z-10">
-        {/* Section label */}
-        <div className="flex items-center gap-4 mb-14 md:mb-20">
-          <span className="font-mono text-xs text-accent tracking-[0.2em]">(05)</span>
-          <span className="font-mono text-xs text-muted tracking-[0.3em] uppercase">
-            Selected Work
-          </span>
-          <div className="flex-1 h-px bg-line" />
-        </div>
-
-        <h2
-          className="font-grotesk font-light tracking-tight mb-16 md:mb-24"
-          style={{ fontSize: "clamp(1.75rem, 4.2vw, 3.5rem)" }}
-        >
-          Things I&apos;ve{" "}
-          <em className="font-fraunces italic text-accent">built</em>.
-        </h2>
+        <SectionHeader className="mb-16 md:mb-24" />
 
         {/* Projects */}
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-16 md:gap-y-24">
@@ -236,6 +517,12 @@ const Portfolio = () => {
       </div>
     </section>
   );
+};
+
+
+const Portfolio = () => {
+  const reel = useMediaQuery(REEL_QUERY);
+  return reel ? <ProjectReel /> : <ProjectGrid />;
 };
 
 export default Portfolio;

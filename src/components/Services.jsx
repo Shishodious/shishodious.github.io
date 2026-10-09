@@ -1,46 +1,151 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { HiOutlineArrowUpRight } from "react-icons/hi2";
+import {
+  HiOutlineGlobeAlt,
+  HiOutlineServerStack,
+  HiOutlineShoppingBag,
+  HiOutlineSignal,
+  HiOutlineSparkles,
+  HiOutlineSquare3Stack3D,
+} from "react-icons/hi2";
 
 const services = [
   {
     id: "01",
     title: "Full-Stack Web Apps",
+    icon: HiOutlineSquare3Stack3D,
     description:
       "Complete products — React and Next.js frontends backed by Node or NestJS APIs, taken from first commit to production.",
   },
   {
     id: "02",
     title: "AI-Integrated Products",
+    icon: HiOutlineSparkles,
     description:
       "Language and vision models wired into real product surfaces — multimodal pipelines, embeddings and vector search, structured extraction from messy input, and queue-driven processing built for production volume.",
   },
   {
     id: "03",
     title: "Backend & API Systems",
+    icon: HiOutlineServerStack,
     description:
       "REST APIs with authentication, role-based access, job queues, and system design that holds up as usage grows.",
   },
   {
     id: "04",
     title: "Realtime Applications",
+    icon: HiOutlineSignal,
     description:
       "Live chat, tracking, and notifications over WebSockets — engineered for concurrent users, not demos.",
   },
   {
     id: "05",
     title: "E-commerce Builds",
+    icon: HiOutlineShoppingBag,
     description:
       "Storefronts with product management, carts, and order processing wired to real business logic.",
   },
   {
     id: "06",
     title: "Automation & Scraping",
+    icon: HiOutlineGlobeAlt,
     description:
       "Structured data extraction at scale — rate-limited, retry-safe crawlers exposed through clean APIs.",
   },
 ];
+
+// Registration ticks in each corner — the card reads as a spec sheet.
+const CORNERS = [
+  "top-3 left-3 border-t border-l",
+  "top-3 right-3 border-t border-r",
+  "bottom-3 left-3 border-b border-l",
+  "bottom-3 right-3 border-b border-r",
+];
+
+const CardFace = ({ id, title, description, icon: Icon, inverted, className = "" }) => (
+  <div
+    className={`flex flex-col h-full p-7 md:p-8 ${
+      inverted ? "bg-ink text-bg" : "text-ink"
+    } ${className}`}
+  >
+    {CORNERS.map((pos) => (
+      <span
+        key={pos}
+        className={`absolute w-2.5 h-2.5 ${pos} ${
+          inverted ? "border-bg/30" : "border-ink/20"
+        }`}
+      />
+    ))}
+
+    <div className="flex items-start justify-between">
+      <span className="font-mono text-xs text-accent tracking-[0.2em]">/{id}</span>
+      <Icon
+        size={30}
+        className={inverted ? "text-accent" : "text-muted"}
+        style={{ strokeWidth: 1.1 }}
+      />
+    </div>
+
+    <div className="mt-16 md:mt-24">
+      <h3
+        className="font-grotesk font-light tracking-tight leading-[1.1]"
+        style={{ fontSize: "clamp(1.5rem, 2.1vw, 2rem)" }}
+      >
+        {title}
+      </h3>
+      <p
+        className={`mt-4 text-sm md:text-[15px] font-light leading-[1.8] ${
+          inverted ? "text-bg/70" : "text-muted"
+        }`}
+      >
+        {description}
+      </p>
+    </div>
+  </div>
+);
+
+/**
+ * A service card that inverts on hover. The inverted face is a full copy of the
+ * card laid over the top and clipped to a circle; the circle grows from the
+ * point the cursor came in and shrinks back toward the point it left, so the
+ * colour change wipes across with the pointer instead of snapping.
+ */
+const ServiceCard = (service) => {
+  const cardRef = useRef(null);
+  const invertedRef = useRef(null);
+
+  const wipe = (e, open) => {
+    // A tap fires enter and leave back to back — not worth a flash.
+    if (e.pointerType === "touch") return;
+    const face = invertedRef.current;
+    const rect = cardRef.current.getBoundingClientRect();
+    const at = `at ${e.clientX - rect.left}px ${e.clientY - rect.top}px`;
+    if (open) {
+      // Start from a dot under the cursor, not from wherever the last wipe ended.
+      face.style.transition = "none";
+      face.style.clipPath = `circle(0% ${at})`;
+      face.getBoundingClientRect();
+      face.style.transition = "";
+    }
+    face.style.clipPath = `circle(${open ? 150 : 0}% ${at})`;
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onPointerEnter={(e) => wipe(e, true)}
+      onPointerLeave={(e) => wipe(e, false)}
+      className="relative flex flex-col h-full min-h-[320px] md:min-h-[360px] overflow-hidden rounded-2xl border border-line bg-bg
+                 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:-rotate-[0.6deg]"
+    >
+      <CardFace {...service} className="flex-1" />
+      <div ref={invertedRef} aria-hidden="true" className="invert-face absolute inset-0">
+        <CardFace {...service} inverted />
+      </div>
+    </div>
+  );
+};
 
 const Services = () => {
   const sectionRef = useRef(null);
@@ -95,29 +200,11 @@ const Services = () => {
           <em className="font-fraunces italic text-accent">buzzwords</em>.
         </h2>
 
-        {/* Service rows */}
-        <div className="border-t border-line">
-          {services.map(({ id, title, description }) => (
-            <div
-              key={id}
-              className="service-row group grid md:grid-cols-12 gap-3 md:gap-8 py-9 md:py-12 border-b border-line items-baseline"
-            >
-              <span className="md:col-span-1 font-mono text-xs text-accent tracking-[0.2em]">
-                /{id}
-              </span>
-              <h3
-                className="md:col-span-5 font-grotesk font-light text-ink group-hover:text-accent transition-colors duration-300 flex items-baseline gap-3"
-                style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)" }}
-              >
-                {title}
-                <HiOutlineArrowUpRight
-                  size={20}
-                  className="shrink-0 text-accent opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300"
-                />
-              </h3>
-              <p className="md:col-span-6 text-muted text-sm md:text-base font-light leading-[1.85] max-w-xl">
-                {description}
-              </p>
+        {/* Service cards */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          {services.map((service) => (
+            <div key={service.id} className="service-row">
+              <ServiceCard {...service} />
             </div>
           ))}
         </div>
