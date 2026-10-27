@@ -177,7 +177,7 @@ const NavBar = ({ service }) => {
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 h-[100dvh] bg-bg flex flex-col justify-center px-8 transform transition-all duration-500 ease-in-out z-50 lg:hidden ${
+        className={`fixed inset-0 h-[100dvh] bg-bg flex flex-col justify-start overflow-y-auto px-8 pt-24 pb-10 transform transition-all duration-500 ease-in-out z-50 lg:hidden ${
           nav ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
@@ -187,7 +187,7 @@ const NavBar = ({ service }) => {
               <SectionLink
                 to={link}
                 onClick={() => setNav(false)}
-                className="group flex items-baseline gap-4 py-4 cursor-pointer"
+                className="group flex items-baseline gap-4 py-3 cursor-pointer"
               >
                 <span className="font-mono text-xs text-accent">0{id}</span>
                 <span className="font-fraunces italic font-light text-4xl text-ink group-hover:text-accent group-hover:translate-x-2 transition-all duration-300 inline-block">

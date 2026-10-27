@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const NAV_OFFSET = -70;
 
@@ -51,8 +52,12 @@ export const useActiveSection = (ids) => {
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
+    // Pins and lazy sections move everything below them without a scroll
+    // event, so re-check whenever ScrollTrigger re-measures the page.
+    ScrollTrigger.addEventListener("refresh", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      ScrollTrigger.removeEventListener("refresh", onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
   }, [key]);

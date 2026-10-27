@@ -151,7 +151,7 @@ const Home = () => {
         <div ref={ctaRef} className="mt-12 flex flex-wrap items-center justify-end gap-6">
           <Lean>
             <Link
-              to="portfolio"
+              to="work"
               className="group cursor-pointer inline-flex items-center gap-2 px-7 py-3.5 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide hover:bg-ink transition-colors duration-300"
             >
               Selected work

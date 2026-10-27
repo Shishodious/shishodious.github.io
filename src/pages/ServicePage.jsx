@@ -18,12 +18,12 @@ const ServicePage = () => {
 
   return (
     <main key={service.slug}>
-      {service.chapters.map(({ id, eager, component: Chapter }) =>
+      {service.chapters.map(({ id, eager, component: Chapter, props }) =>
         eager ? (
-          <Chapter key={id} service={service} />
+          <Chapter key={id} service={service} {...props} />
         ) : (
           <LazySection key={id} anchorId={id}>
-            <Chapter service={service} />
+            <Chapter service={service} {...props} />
           </LazySection>
         )
       )}

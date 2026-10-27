@@ -1,6 +1,9 @@
 import { lazy } from "react";
 import Home from "../components/Home";
 import WorldIntro from "../chapters/WorldIntro";
+import BrandHero from "../chapters/BrandHero";
+import * as apps from "./apps";
+import * as brand from "./brand";
 
 // Below-the-fold chapters are code-split and mounted only when scrolled near
 // (see LazySection). Hero chapters are imported eagerly and marked `eager`.
@@ -10,6 +13,10 @@ const Skills = lazy(() => import("../components/Skills"));
 const Experience = lazy(() => import("../components/Experience"));
 const Portfolio = lazy(() => import("../components/Portfolio"));
 const Contact = lazy(() => import("../components/Contact"));
+const CaseStudies = lazy(() => import("../chapters/CaseStudies"));
+const ProcessChapters = lazy(() => import("../chapters/ProcessChapters"));
+const Artefacts = lazy(() => import("../chapters/Artefacts"));
+const Deliverables = lazy(() => import("../chapters/Deliverables"));
 
 const contact = { id: "contact", nav: "Contact", component: Contact };
 
@@ -20,7 +27,8 @@ const contact = { id: "contact", nav: "Contact", component: Contact };
  *
  * - slug:     route segment and the data-world key in src/worlds.css
  * - chapters: rendered top to bottom; `nav` adds the chapter to the nav pill,
- *             `eager` mounts it immediately instead of on approach
+ *             `eager` mounts it immediately instead of on approach, `props`
+ *             is the content handed to the chapter (see ./apps.js etc.)
  */
 export const services = [
   {
@@ -42,7 +50,23 @@ export const services = [
     name: "Brand Websites",
     word: "Brands",
     tagline: "Sites that feel like the brand before anyone reads a word.",
-    chapters: [{ id: "home", eager: true, component: WorldIntro }, contact],
+    chapters: [
+      {
+        id: "home",
+        eager: true,
+        component: BrandHero,
+        props: { credits: brand.credits, headline: brand.headline, pulls: brand.pulls },
+      },
+      {
+        id: "process",
+        nav: "Process",
+        component: ProcessChapters,
+        props: { steps: brand.process, title: "How a brand site gets made." },
+      },
+      { id: "work", nav: "Work", component: Artefacts, props: { items: brand.work } },
+      { id: "included", nav: "Included", component: Deliverables, props: { items: brand.deliverables } },
+      contact,
+    ],
   },
   {
     slug: "apps",
@@ -52,10 +76,18 @@ export const services = [
     chapters: [
       { id: "home", eager: true, component: Home },
       { id: "about", nav: "About", component: About },
-      { id: "services", nav: "Services", component: Services },
-      { id: "skills", nav: "Stack", component: Skills },
-      { id: "experience", nav: "Experience", component: Experience },
-      { id: "portfolio", nav: "Work", component: Portfolio },
+      { id: "services", nav: "Services", component: Services, props: { items: apps.capabilities } },
+      { id: "skills", nav: "Stack", component: Skills, props: { groups: apps.stack } },
+      { id: "experience", nav: "Experience", component: Experience, props: { experiences: apps.experience } },
+      { id: "work", nav: "Work", component: CaseStudies, props: { studies: apps.caseStudies } },
+      {
+        id: "portfolio",
+        component: Portfolio,
+        props: {
+          eyebrow: "More work",
+          projects: apps.projects.filter((p) => !apps.caseStudies.some((c) => c.title === p.title)),
+        },
+      },
       contact,
     ],
   },
