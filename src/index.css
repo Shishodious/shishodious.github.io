@@ -259,7 +259,35 @@ body {
 }
 
 /* ——— Reduced motion ——— */
+/* ——— Chooser: letter-by-letter roll into the accent colour ——— */
+.roll-char {
+  display: inline-block;
+  position: relative;
+  /* clip vertically only, so glyph overhangs stay visible */
+  clip-path: inset(0 -25% 0 -25%);
+}
+.roll-a,
+.roll-b {
+  display: block;
+  transition: transform 0.65s cubic-bezier(0.76, 0, 0.24, 1);
+  transition-delay: calc(var(--i) * 28ms);
+}
+.roll-b {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  color: rgb(var(--accent));
+}
+[data-on="true"] > .roll-char > .roll-a,
+[data-on="true"] > .roll-char > .roll-b {
+  transform: translateY(-100%);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .roll-a,
+  .roll-b {
+    transition: none;
+  }
   .marquee-track,
   .scroll-bounce,
   .grain {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { HiMiniBars2, HiXMark } from "react-icons/hi2";
-import { Link as RouterLink } from "react-router-dom";
+import WorldLink from "../shell/WorldLink";
 import Lean from "./effects/Lean";
 import ServiceSwitcher from "../shell/ServiceSwitcher";
 import SectionLink from "../shell/SectionLink";
@@ -86,14 +86,14 @@ const NavBar = ({ service }) => {
       }`}
     >
       {/* Logo */}
-      <RouterLink to="/" aria-label="All services" className="cursor-pointer group">
+      <WorldLink to="/" aria-label="All services" className="cursor-pointer group">
         <span className="font-grotesk font-semibold text-lg tracking-tight">
           Priyanshu
           <span className="text-accent transition-colors duration-300 group-hover:text-ink">
             .
           </span>
         </span>
-      </RouterLink>
+      </WorldLink>
 
       {/* Desktop menu */}
       <nav className="hidden lg:flex items-center gap-4 xl:gap-5">
@@ -204,7 +204,7 @@ const NavBar = ({ service }) => {
         <ul className="mt-3 flex flex-wrap gap-2">
           {services.map((s) => (
             <li key={s.slug}>
-              <RouterLink
+              <WorldLink
                 to={`/${s.slug}`}
                 onClick={() => setNav(false)}
                 aria-current={s.slug === service?.slug ? "page" : undefined}
@@ -215,7 +215,7 @@ const NavBar = ({ service }) => {
                 }`}
               >
                 {s.name}
-              </RouterLink>
+              </WorldLink>
             </li>
           ))}
         </ul>

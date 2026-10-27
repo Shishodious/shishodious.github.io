@@ -65,7 +65,7 @@ src/pages/ServicePage.jsx    reads registry and renders chapters inside LazySect
 src/chapters/                Hero, DiscReel, ScrubVideo, Chapters (horizontal),
                              Domino, StackCards, Quotes, Process, CTA, …
 src/shell/Layout.jsx         grain, NavBar (+ ServiceSwitcher), Lenis, transitions
-src/effects/shaders/         haze.js, dissolve.js (raw WebGL)
+src/components/effects/shaders/  gl.js, haze.js, dissolve.js (raw WebGL)
 ```
 
 ## Page concepts
@@ -125,7 +125,7 @@ src/effects/shaders/         haze.js, dissolve.js (raw WebGL)
   pane, including a hard refresh on `/brand`.
 
 ### P2 — The chooser gate
-- Files: `Chooser.jsx`, `effects/shaders/haze.js`, `effects/shaders/dissolve.js`,
+- Files: `Chooser.jsx`, `components/effects/shaders/{gl,haze,dissolve}.js`, `shell/WorldTransition.jsx`,
   and `shell/Layout.jsx` (transition).
 - Result: the full gate experience and the dissolve transition into each world, with a
   reduced-motion fallback (crossfade).

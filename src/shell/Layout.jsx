@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NavBar from "../components/NavBar";
 import SocialLinks from "../components/SocialLinks";
+import WorldTransition from "./WorldTransition";
 import { findService } from "../services/registry";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,14 +48,14 @@ const Layout = () => {
   }, [pathname, service]);
 
   return (
-    <>
+    <WorldTransition>
       {/* Film grain over everything */}
       <div className="grain" aria-hidden="true" />
 
       <NavBar service={service} />
       {service && <SocialLinks />}
       <Outlet />
-    </>
+    </WorldTransition>
   );
 };
 

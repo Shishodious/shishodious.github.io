@@ -4,6 +4,7 @@
  * token (bg, elev, ink, muted, accent, line) reads through. Layout sets
  * data-world on <html>, so switching service recolours the whole shell.
  * Channels are bare "r g b" triples so Tailwind's /<alpha> modifiers work.
+ * --glow is how strongly the chooser's haze tints toward the accent.
  */
 
 /* Gate + Apps & Products — the original warm black and orange */
@@ -15,6 +16,7 @@
   --muted: 142 136 122;
   --accent: 255 92 40;
   --theme: #0d0c0a;
+  --glow: 0.5;
   color-scheme: dark;
 }
 
@@ -26,6 +28,7 @@
   --muted: 128 126 134;
   --accent: 229 50 45;
   --theme: #09090b;
+  --glow: 0.3;
   color-scheme: dark;
 }
 
@@ -37,6 +40,7 @@
   --muted: 160 138 148;
   --accent: 255 122 168;
   --theme: #160f14;
+  --glow: 0.42;
   color-scheme: dark;
 }
 
@@ -48,5 +52,6 @@
   --muted: 111 107 102;
   --accent: 212 42 31;
   --theme: #efede9;
+  --glow: 0.28;
   color-scheme: light;
 }

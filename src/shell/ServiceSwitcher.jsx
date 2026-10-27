@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "./WorldLink";
 import { HiChevronDown, HiOutlineSquares2X2 } from "react-icons/hi2";
 import { services } from "../services/registry";
 
