@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-scroll";
+import Link from "../shell/SectionLink";
 import gsap from "gsap";
 import RotatingText from "./RotatingText";
 import VariableProximity from "./VariableProximity";
@@ -152,9 +152,6 @@ const Home = () => {
           <Lean>
             <Link
               to="portfolio"
-              smooth
-              duration={700}
-              offset={-70}
               className="group cursor-pointer inline-flex items-center gap-2 px-7 py-3.5 bg-accent text-bg rounded-full font-grotesk font-medium text-sm tracking-wide hover:bg-ink transition-colors duration-300"
             >
               Selected work
@@ -167,9 +164,6 @@ const Home = () => {
           <Lean tilt={4}>
             <Link
               to="contact"
-              smooth
-              duration={700}
-              offset={-70}
               className="u-link cursor-pointer font-mono text-sm tracking-[0.15em] text-ink uppercase"
             >
               Get in touch
@@ -181,9 +175,6 @@ const Home = () => {
       {/* Scroll cue */}
       <Link
         to="about"
-        smooth
-        duration={700}
-        offset={-70}
         className="absolute bottom-24 left-6 md:left-12 z-10 cursor-pointer hidden sm:flex flex-col items-center gap-3"
       >
         <span

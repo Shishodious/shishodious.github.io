@@ -8,14 +8,21 @@
 
 @layer base {
   html {
-    background-color: #0d0c0a;
-    color: #ede8df;
+    background-color: rgb(var(--bg));
+    color: rgb(var(--ink));
     scroll-behavior: smooth;
+  }
+
+  /* Lenis drives smooth scroll; native smoothing would fight it. */
+  html.lenis {
+    scroll-behavior: auto;
   }
 
   body {
     @apply font-grotesk antialiased;
-    background-color: #0d0c0a;
+    background-color: rgb(var(--bg));
+    /* Crossfade between worlds when the service changes */
+    transition: background-color 0.6s ease, color 0.6s ease;
   }
 }
 
@@ -30,8 +37,8 @@ body {
 
 /* Text selection */
 ::selection {
-  background-color: #ff5c28;
-  color: #0d0c0a;
+  background-color: rgb(var(--accent));
+  color: rgb(var(--bg));
 }
 
 /* ——— Film grain overlay ——— */
@@ -100,7 +107,7 @@ body {
 
 /* ——— Outline / ghost display text ——— */
 .text-outline {
-  -webkit-text-stroke: 1px rgba(237, 232, 223, 0.16);
+  -webkit-text-stroke: 1px rgb(var(--ink) / 0.16);
   color: transparent;
 }
 
@@ -131,7 +138,7 @@ body {
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.05em;
-  -webkit-text-stroke: 1px rgba(237, 232, 223, 0.06);
+  -webkit-text-stroke: 1px rgb(var(--ink) / 0.06);
   color: transparent;
   user-select: none;
   pointer-events: none;
@@ -219,8 +226,8 @@ body {
   background: radial-gradient(
     118% 88% at 50% 44%,
     transparent 38%,
-    rgba(13, 12, 10, 0.42) 78%,
-    rgba(13, 12, 10, 0.78) 100%
+    rgb(var(--bg) / 0.42) 78%,
+    rgb(var(--bg) / 0.78) 100%
   );
 }
 
@@ -244,10 +251,10 @@ body {
   width: 3px;
 }
 .custom-scroll::-webkit-scrollbar-track {
-  background: rgba(237, 232, 223, 0.04);
+  background: rgb(var(--ink) / 0.04);
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 92, 40, 0.5);
+  background: rgb(var(--accent) / 0.5);
   border-radius: 2px;
 }
 

@@ -1,0 +1,52 @@
+/* src/worlds.css
+ *
+ * Each service is a "world": one set of colour channels that every Tailwind
+ * token (bg, elev, ink, muted, accent, line) reads through. Layout sets
+ * data-world on <html>, so switching service recolours the whole shell.
+ * Channels are bare "r g b" triples so Tailwind's /<alpha> modifiers work.
+ */
+
+/* Gate + Apps & Products — the original warm black and orange */
+:root,
+[data-world="apps"] {
+  --bg: 13 12 10;
+  --elev: 20 18 15;
+  --ink: 237 232 223;
+  --muted: 142 136 122;
+  --accent: 255 92 40;
+  --theme: #0d0c0a;
+  color-scheme: dark;
+}
+
+/* Video Editing — dark cinema: cold black, bone white, projector red */
+[data-world="video"] {
+  --bg: 9 9 11;
+  --elev: 18 18 22;
+  --ink: 242 239 233;
+  --muted: 128 126 134;
+  --accent: 229 50 45;
+  --theme: #09090b;
+  color-scheme: dark;
+}
+
+/* Content Creation — warm and social: aubergine night, blush highlights */
+[data-world="content"] {
+  --bg: 22 15 20;
+  --elev: 33 23 30;
+  --ink: 246 233 228;
+  --muted: 160 138 148;
+  --accent: 255 122 168;
+  --theme: #160f14;
+  color-scheme: dark;
+}
+
+/* Brand Websites — light paper, ink black, A24 red */
+[data-world="brand"] {
+  --bg: 239 237 233;
+  --elev: 230 227 221;
+  --ink: 18 18 18;
+  --muted: 111 107 102;
+  --accent: 212 42 31;
+  --theme: #efede9;
+  color-scheme: light;
+}
