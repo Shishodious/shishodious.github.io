@@ -19,6 +19,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>Priyanshu Shishodia — Full Stack Developer</title>
+    <script>
+      // Pick the service's world before first paint so a deep link to a light
+      // world doesn't fade in from the default dark one (see src/worlds.css).
+      document.documentElement.dataset.world = location.pathname.split("/")[1] || "gate";
+    </script>
   </head>
   <body>
     <div id="root"></div>

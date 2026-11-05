@@ -2,37 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const groups = [
-  {
-    category: "Frontend",
-    items: ["React", "Next.js", "Tailwind CSS", "GSAP", "Framer Motion"],
-  },
-  {
-    category: "Backend",
-    items: ["Node.js", "Express", "NestJS", "REST APIs", "WebSockets"],
-  },
-  {
-    category: "AI & Automation",
-    items: [
-      "LLM APIs",
-      "Google Gemini",
-      "pgvector",
-      "Vector Search",
-      "OCR & Transcription",
-      "Puppeteer",
-    ],
-  },
-  {
-    category: "Data & Cloud",
-    items: ["PostgreSQL", "MongoDB", "Redis", "AWS", "Strapi"],
-  },
-  {
-    category: "Languages",
-    items: ["TypeScript", "JavaScript", "SQL"],
-  },
-];
-
-const Skills = () => {
+const Skills = ({ groups }) => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
