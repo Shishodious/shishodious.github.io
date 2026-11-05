@@ -4,8 +4,8 @@ import { HiOutlineSpeakerWave, HiOutlineSpeakerXMark } from "react-icons/hi2";
 // Only one tile plays sound at a time.
 let audible = null;
 
-/** Film-leader countdown shown until a real video is supplied. */
-const Leader = ({ title, ratio }) => (
+/** Film-leader countdown shown until the real media is supplied. Labels are optional. */
+export const Leader = ({ title, ratio }) => (
   <div className="absolute inset-0 font-mono text-[10px] tracking-[0.2em] uppercase text-muted">
     <svg viewBox="0 0 100 100" aria-hidden="true" className="absolute inset-[14%] w-[72%] h-[72%]">
       <path className="leader-sweep" d="M50 50 L50 3 A47 47 0 0 1 97 50 Z" fill="currentColor" opacity="0.28" />
@@ -13,9 +13,13 @@ const Leader = ({ title, ratio }) => (
       <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeOpacity="0.5" strokeWidth="0.5" />
       <path d="M0 50 H100 M50 0 V100" stroke="currentColor" strokeOpacity="0.5" strokeWidth="0.5" />
     </svg>
-    <span className="absolute top-3 left-3 md:top-4 md:left-4 text-ink/80">{title}</span>
-    <span className="absolute bottom-3 left-3 md:bottom-4 md:left-4">Placeholder</span>
-    <span className="absolute bottom-3 right-3 md:bottom-4 md:right-4">{ratio.replace(" / ", ":")}</span>
+    {title && (
+      <>
+        <span className="absolute top-3 left-3 md:top-4 md:left-4 text-ink/80">{title}</span>
+        <span className="absolute bottom-3 left-3 md:bottom-4 md:left-4">Placeholder</span>
+        <span className="absolute bottom-3 right-3 md:bottom-4 md:right-4">{ratio.replace(" / ", ":")}</span>
+      </>
+    )}
   </div>
 );
 

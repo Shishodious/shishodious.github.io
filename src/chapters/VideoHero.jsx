@@ -47,7 +47,7 @@ const VideoHero = ({ hero }) => {
 
         <h1 className="relative flex flex-col items-center gap-[calc(var(--tile)*0.54)] pointer-events-none">
           <span className="block overflow-hidden px-[0.1em] pb-[0.2em]">
-            <span data-line className="block font-fraunces italic font-light tracking-[-0.02em] leading-none text-[clamp(2.25rem,6vw,5.5rem)]">
+            <span data-line className="block font-grotesk font-light tracking-tight leading-none text-[clamp(2rem,6vw,5.5rem)]">
               {hero.name}
             </span>
           </span>

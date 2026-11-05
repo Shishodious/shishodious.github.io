@@ -51,6 +51,35 @@ export const process = [
   },
 ];
 
+// SEO and AEO. Tools and techniques only: no promises about rankings.
+export const seo = {
+  title: ["Found on Google.", "Cited by AI."],
+  intro:
+    "SEO and AEO are handled end to end, from the first line of code to the reports after launch. Nothing to bolt on later, and no extra agency to brief.",
+  groups: [
+    {
+      title: "Technical SEO",
+      body: "A site search engines can crawl, understand and load fast, on every device.",
+      items: ["XML sitemap", "Robots.txt", "Canonical tags", "Redirects", "Core Web Vitals", "Mobile-first", "Image optimisation"],
+    },
+    {
+      title: "On-page SEO",
+      body: "Every page built around a real search, in the words your customers actually use.",
+      items: ["Keyword research", "Titles & meta", "Heading structure", "Internal linking", "Alt text", "Open Graph images"],
+    },
+    {
+      title: "AEO",
+      body: "Answer engine optimisation: making your brand easy for ChatGPT, Perplexity and Google's AI Overviews to understand and quote.",
+      items: ["JSON-LD schema", "FAQ content", "llms.txt", "AI crawler access", "Answer-first copy", "Brand & entity signals"],
+    },
+    {
+      title: "Analytics & tracking",
+      body: "Search Console shows how people find you, GA4 what they do next, a Meta Pixel which ads pay off, and Clarity's heatmaps and session recordings where they get stuck.",
+      items: ["Google Search Console", "Google Analytics 4", "Google Tag Manager", "Meta Pixel", "Microsoft Clarity", "Bing Webmaster Tools", "Conversion events"],
+    },
+  ],
+};
+
 /**
  * Brand work, shown as framed artefacts. `src` is a screenshot; entries
  * without one (client work under NDA) render as a sealed card instead.

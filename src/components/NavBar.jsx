@@ -166,6 +166,18 @@ const NavBar = ({ service }) => {
         )}
       </nav>
 
+      {/* The gate has no section links, so contact gets its own way in */}
+      {!service && (
+        <Lean className="ml-auto mr-3 lg:mr-0">
+          <SectionLink
+            to="contact"
+            className="block px-4 lg:px-5 py-2 lg:py-2.5 rounded-full bg-accent text-bg font-mono text-[10px] lg:text-[11px] tracking-[0.2em] uppercase whitespace-nowrap transition-colors duration-300 hover:bg-ink outline-none focus-visible:ring-2 focus-visible:ring-ink/70"
+          >
+            Contact us
+          </SectionLink>
+        </Lean>
+      )}
+
       {/* Mobile menu toggle */}
       <button
         onClick={() => setNav(!nav)}

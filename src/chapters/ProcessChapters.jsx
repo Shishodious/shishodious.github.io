@@ -56,7 +56,7 @@ const ProcessChapters = ({ steps, index = "01", title }) => {
               />
             </div>
           </div>
-          <h2 className="mt-8 font-fraunces font-light tracking-[-0.03em] leading-none text-[clamp(2.25rem,5vw,4.5rem)]">
+          <h2 className="mt-8 font-grotesk font-light tracking-tight leading-[1.05] text-[clamp(2.25rem,5vw,4.5rem)]">
             {title}
           </h2>
         </div>
@@ -70,10 +70,10 @@ const ProcessChapters = ({ steps, index = "01", title }) => {
               key={step.title}
               className="md:motion-safe:w-[min(34rem,62vw)] md:motion-safe:pr-16 md:motion-safe:mr-16 md:motion-safe:border-r md:motion-safe:last:border-r-0 md:motion-safe:last:mr-0 md:motion-safe:last:pr-0 border-line"
             >
-              <span className="block font-fraunces font-light leading-none text-[clamp(4.5rem,9vw,8rem)] text-accent">
+              <span className="block font-grotesk font-light tracking-tight leading-none text-[clamp(4.5rem,9vw,8rem)] text-accent">
                 {pad(i + 1)}
               </span>
-              <h3 className="mt-4 font-fraunces uppercase tracking-[-0.01em] text-3xl md:text-4xl">
+              <h3 className="mt-4 font-grotesk font-light uppercase tracking-tight text-3xl md:text-4xl">
                 {step.title}
               </h3>
               <p className="mt-4 text-ink/75 leading-relaxed max-w-md">{step.body}</p>

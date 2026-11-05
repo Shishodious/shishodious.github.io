@@ -5,7 +5,7 @@ import Scribble from "../components/effects/Scribble";
 /** Film-poster credits: serif title over ruled label/value rows. */
 const Credits = ({ title, rows }) => (
   <div className="w-full max-w-[26rem]">
-    <p className="font-fraunces uppercase tracking-[-0.01em] leading-none text-[clamp(2.25rem,4vw,3.25rem)]">
+    <p className="font-grotesk font-light uppercase tracking-tight leading-none text-[clamp(2.25rem,4vw,3.25rem)]">
       {title}
     </p>
     <dl className="mt-4">
@@ -52,7 +52,7 @@ const BrandHero = ({ credits, headline, pulls }) => {
         <Credits {...credits} />
       </div>
 
-      <h1 className="mt-20 md:mt-auto pt-6 font-fraunces font-light tracking-[-0.035em] leading-[0.98] text-[clamp(2.75rem,7.6vw,8.5rem)] max-w-[17ch]">
+      <h1 className="mt-20 md:mt-auto pt-6 font-grotesk font-light tracking-tight leading-[1.02] text-[clamp(2.75rem,6.6vw,7.5rem)]">
         <span className="block overflow-hidden pb-[0.06em]">
           <span data-line className="block">
             {headline.before}
@@ -62,7 +62,7 @@ const BrandHero = ({ credits, headline, pulls }) => {
         <span className="block pb-[0.06em]">
           <span data-line className="inline-block">
             <Scribble delay={1.1}>
-              <em className="italic">{headline.circled}</em>
+              <em className="not-italic">{headline.circled}</em>
             </Scribble>
           </span>
         </span>

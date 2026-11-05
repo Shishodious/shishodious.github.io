@@ -4,8 +4,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import Lean from "./effects/Lean";
+import EndScreen from "./EndScreen";
 
-const Contact = ({ index = "06" }) => {
+const Contact = ({ index = "06", service }) => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -34,9 +35,10 @@ const Contact = ({ index = "06" }) => {
   }, []);
 
   return (
+    <EndScreen world={service.slug}>
     <section
       ref={sectionRef}
-      className="relative w-full bg-elev text-ink px-6 md:px-12 pt-28 md:pt-40 pb-10 overflow-hidden"
+      className="relative w-full bg-elev text-ink px-6 md:px-12 pt-28 md:pt-40 pb-10 overflow-hidden rounded-2xl md:rounded-[2rem] border border-line shadow-[0_30px_80px_-24px_rgba(0,0,0,0.7)]"
     >
       <span className="section-watermark font-grotesk">{index}</span>
 
@@ -193,6 +195,7 @@ const Contact = ({ index = "06" }) => {
         </footer>
       </div>
     </section>
+    </EndScreen>
   );
 };
 

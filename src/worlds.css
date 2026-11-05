@@ -7,7 +7,7 @@
  * --glow is how strongly the chooser's haze tints toward the accent.
  */
 
-/* Gate + Apps & Products — the original warm black and orange */
+/* Apps & Products (and the fallback) — the original warm black and orange */
 :root,
 [data-world="apps"] {
   --bg: 13 12 10;
@@ -17,6 +17,18 @@
   --accent: 255 92 40;
   --theme: #0d0c0a;
   --glow: 0.5;
+  color-scheme: dark;
+}
+
+/* The home page — black and red, whichever option is hovered */
+[data-world="gate"] {
+  --bg: 9 9 11;
+  --elev: 18 18 22;
+  --ink: 242 239 233;
+  --muted: 128 126 134;
+  --accent: 229 50 45;
+  --theme: #09090b;
+  --glow: 0.42;
   color-scheme: dark;
 }
 

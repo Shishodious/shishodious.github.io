@@ -5,7 +5,7 @@ import VideoTile from "./VideoTile";
 const ReelPanel = ({ index, tone, title, reels }) => (
   <Panel index={index} tone={tone}>
     {title && (
-      <h2 data-reveal className="mb-10 font-fraunces font-light tracking-[-0.035em] leading-none text-[clamp(3rem,6.5vw,6.5rem)]">
+      <h2 data-reveal className="mb-10 font-grotesk font-light tracking-tight leading-[1.05] text-[clamp(3rem,6.5vw,6.5rem)]">
         {title}
       </h2>
     )}
@@ -17,7 +17,7 @@ const ReelPanel = ({ index, tone, title, reels }) => (
           item={reel}
           ratio="9 / 16"
           className={`shrink-0 snap-start w-[72vw] sm:w-[44vw] md:w-full md:justify-self-center ${
-            title ? "md:max-w-[calc(56svh*9/16)]" : "md:max-w-[calc(68svh*9/16)]"
+            title ? "md:max-w-[calc(54svh*9/16)]" : "md:max-w-[calc(68svh*9/16)]"
           }`}
         />
       ))}

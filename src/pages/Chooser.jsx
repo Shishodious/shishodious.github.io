@@ -1,34 +1,51 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, lazy, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
+import LazySection from "../components/LazySection";
 import { lastService, services } from "../services/registry";
 import { createHaze } from "../components/effects/shaders/haze";
 import WorldLink from "../shell/WorldLink";
 import { worldColors } from "../shell/worldColors";
 
-/** A word whose letters roll up, one after another, into the accent copy. */
-const RollWord = ({ word, on }) => (
-  <span data-on={on} aria-label={word} className="inline-block whitespace-nowrap">
-    {[...word].map((ch, i) => (
-      <span key={i} className="roll-char" style={{ "--i": i }} aria-hidden="true">
-        <span className="roll-a">{ch}</span>
-        <span className="roll-b">{ch}</span>
-      </span>
-    ))}
-  </span>
-);
+const Contact = lazy(() => import("../components/Contact"));
 
 /**
- * The gate on "/": four doors, one per service. Hovering a door previews its
- * world — the haze, the type and the whole page recolour — and clicking it
- * dissolves into that world.
+ * A label whose letters roll up, one after another, into the accent copy.
+ * Lines break between words only; the stagger runs across the whole label.
+ */
+const RollLabel = ({ label, on }) => {
+  const words = label.split(" ");
+  return (
+    <span aria-label={label} className="block">
+      {words.map((word, w) => {
+        const start = words.slice(0, w).join(" ").length + (w ? 1 : 0);
+        return (
+          <Fragment key={word}>
+            {w > 0 && " "}
+            <span data-on={on} className="inline-block whitespace-nowrap">
+              {[...word].map((ch, i) => (
+                <span key={i} className="roll-char" style={{ "--i": start + i }} aria-hidden="true">
+                  <span className="roll-a">{ch}</span>
+                  <span className="roll-b">{ch}</span>
+                </span>
+              ))}
+            </span>
+          </Fragment>
+        );
+      })}
+    </span>
+  );
+};
+
+/**
+ * The gate on "/": four doors, one per service, in the gate's own red and
+ * black. Hovering a door rolls its label; clicking it dissolves into that world.
  */
 const Chooser = () => {
   const [active, setActive] = useState(null);
   const [last] = useState(lastService);
   const rootRef = useRef(null);
   const hazeRef = useRef(null);
-  const hazeFx = useRef(null);
   const badgeRef = useRef(null);
 
   useEffect(() => {
@@ -36,23 +53,28 @@ const Chooser = () => {
   }, []);
 
   // The haze is decoration: skipped for reduced motion and without WebGL.
+  // It stops once the visitor has scrolled down to the contact footer.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    hazeFx.current = createHaze(hazeRef.current);
-    hazeFx.current?.setWorld(worldColors("gate"));
+    let haze = null;
+    const stop = () => {
+      haze?.destroy();
+      haze = null;
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !haze) {
+        haze = createHaze(hazeRef.current);
+        haze?.setWorld(worldColors("gate"));
+      } else if (!entry.isIntersecting) {
+        stop();
+      }
+    });
+    observer.observe(hazeRef.current);
     return () => {
-      hazeFx.current?.destroy();
-      hazeFx.current = null;
+      observer.disconnect();
+      stop();
     };
   }, []);
-
-  // Preview the hovered world across the whole page. Not reset on unmount:
-  // Layout sets the destination's world when the route changes.
-  useLayoutEffect(() => {
-    const world = active ?? "gate";
-    document.documentElement.dataset.world = world;
-    hazeFx.current?.setWorld(worldColors(world));
-  }, [active]);
 
   // Lines rise into place on arrival.
   useEffect(() => {
@@ -98,6 +120,7 @@ const Chooser = () => {
   const index = current ? services.indexOf(current) + 1 : null;
 
   return (
+    <>
     <main
       ref={rootRef}
       className="relative h-[100svh] min-h-[560px] overflow-hidden select-none"
@@ -109,7 +132,7 @@ const Chooser = () => {
           data-fade
           className="flex items-baseline justify-between font-mono text-[11px] tracking-[0.3em] uppercase text-muted transition-colors duration-500"
         >
-          <h1>What are we making?</h1>
+          <h1>What can I do for you?</h1>
           <p className="hidden sm:block">Choose one — switch anytime</p>
         </div>
 
@@ -131,23 +154,23 @@ const Chooser = () => {
                   onBlur={(e) => {
                     if (!e.currentTarget.closest("ul").contains(e.relatedTarget)) setActive(null);
                   }}
-                  className={`group flex items-center gap-4 md:gap-8 outline-none transition-opacity duration-500 ${
+                  className={`group relative flex items-center gap-4 md:gap-8 outline-none transition-opacity duration-500 ${
                     dim ? "opacity-25" : "opacity-100"
                   }`}
                 >
                   <span className="font-mono text-xs text-accent w-6 shrink-0 transition-colors duration-500">
                     0{i + 1}
                   </span>
-                  <span className="block overflow-hidden py-[0.04em]">
+                  <span className="block min-w-0 overflow-hidden py-[0.04em]">
                     <span
                       data-rise
-                      className="block font-fraunces font-light tracking-[-0.035em] leading-[1.02] text-ink text-[clamp(3.25rem,min(12vw,15svh),10rem)] transition-colors duration-500"
+                      className="block font-grotesk font-light tracking-tight leading-[1.15] text-ink text-[clamp(2.25rem,min(7vw,15svh),10rem)] transition-colors duration-500"
                     >
-                      <RollWord word={service.word} on={on} />
+                      <RollLabel label={service.door} on={on} />
                     </span>
                   </span>
                   {last === service.slug && (
-                    <span className="self-start mt-2 md:mt-5 font-mono text-[10px] tracking-[0.25em] uppercase text-accent whitespace-nowrap transition-colors duration-500">
+                    <span className="absolute top-1 right-0 md:static md:self-start md:mt-5 shrink-0 font-mono text-[9px] md:text-[10px] tracking-[0.12em] md:tracking-[0.25em] uppercase text-accent whitespace-nowrap transition-colors duration-500">
                       Last visited
                     </span>
                   )}
@@ -178,7 +201,7 @@ const Chooser = () => {
             {current ? current.tagline : "Video, content, brands and products — one person, start to finish."}
           </p>
           <p className="hidden md:block text-right">
-            {current ? current.name : "Hover a door"}
+            {current ? current.door : "Hover a door"}
           </p>
         </div>
       </div>
@@ -198,6 +221,12 @@ const Chooser = () => {
         </div>
       </div>
     </main>
+
+    {/* Numbered on from the four doors */}
+    <LazySection anchorId="contact">
+      <Contact index="05" service={{ slug: "gate" }} />
+    </LazySection>
+    </>
   );
 };
 

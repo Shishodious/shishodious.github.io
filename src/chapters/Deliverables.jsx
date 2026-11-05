@@ -32,7 +32,7 @@ const Deliverables = ({ items, index = "03", title = "Everything in the box." })
               Included
             </span>
           </div>
-          <h2 className="mt-8 font-fraunces font-light tracking-[-0.03em] leading-none text-[clamp(2.25rem,5vw,4.5rem)] md:sticky md:top-32">
+          <h2 className="mt-8 font-grotesk font-light tracking-tight leading-[1.05] text-[clamp(2.25rem,5vw,4.5rem)] md:sticky md:top-32">
             {title}
           </h2>
         </div>

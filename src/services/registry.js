@@ -19,6 +19,7 @@ const CaseStudies = lazy(() => import("../chapters/CaseStudies"));
 const ProcessChapters = lazy(() => import("../chapters/ProcessChapters"));
 const Artefacts = lazy(() => import("../chapters/Artefacts"));
 const Deliverables = lazy(() => import("../chapters/Deliverables"));
+const SeoAeo = lazy(() => import("../chapters/SeoAeo"));
 const VideoAbout = lazy(() => import("../chapters/VideoAbout"));
 const VideoSkills = lazy(() => import("../chapters/VideoSkills"));
 const ReelPanel = lazy(() => import("../chapters/ReelPanel"));
@@ -37,6 +38,8 @@ const firstAfterReels = 4 + video.reelPanels.length;
  * its chapters — nothing in the shell changes.
  *
  * - slug:     route segment and the data-world key in src/worlds.css
+ * - word:     short label for the nav pill and page openers
+ * - door:     the option's full label on the home page
  * - chapters: rendered top to bottom; `nav` adds the chapter to the nav pill,
  *             `eager` mounts it immediately instead of on approach, `props`
  *             is the content handed to the chapter (see ./apps.js etc.)
@@ -46,6 +49,7 @@ export const services = [
     slug: "video",
     name: "Video Editing",
     word: "Video",
+    door: "Video editing",
     tagline: "Cuts, colour and pacing that hold attention past the first second.",
     chapters: [
       { id: "home", eager: true, component: VideoHero, props: { hero: video.hero } },
@@ -69,13 +73,15 @@ export const services = [
     slug: "content",
     name: "Content Creation",
     word: "Content",
+    door: "Content creation",
     tagline: "Short-form that sounds like you and lands with the people you want.",
     chapters: [{ id: "home", eager: true, component: WorldIntro }, contact],
   },
   {
     slug: "brand",
     name: "Brand Websites",
-    word: "Brands",
+    word: "Brand",
+    door: "Brand presence",
     tagline: "Sites that feel like the brand before anyone reads a word.",
     chapters: [
       {
@@ -90,15 +96,22 @@ export const services = [
         component: ProcessChapters,
         props: { steps: brand.process, title: "How a brand site gets made." },
       },
-      { id: "work", nav: "Work", component: Artefacts, props: { items: brand.work } },
-      { id: "included", nav: "Included", component: Deliverables, props: { items: brand.deliverables } },
-      contact,
+      { id: "seo", nav: "SEO", component: SeoAeo, props: { ...brand.seo, index: "02" } },
+      { id: "work", nav: "Work", component: Artefacts, props: { items: brand.work, index: "03" } },
+      {
+        id: "included",
+        nav: "Included",
+        component: Deliverables,
+        props: { items: brand.deliverables, index: "04" },
+      },
+      { ...contact, props: { index: "05" } },
     ],
   },
   {
     slug: "apps",
     name: "Apps & Products",
     word: "Products",
+    door: "Product development",
     tagline: "Full-stack products and AI systems, from first commit to production.",
     chapters: [
       { id: "home", eager: true, component: Home },

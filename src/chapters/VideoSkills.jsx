@@ -14,7 +14,7 @@ const VideoSkills = ({ index, title, tools, styles }) => (
   <Panel index={index}>
     <div className="grid md:grid-cols-2 gap-14 md:gap-16 items-center">
       <div>
-        <h2 data-reveal className="font-fraunces font-light tracking-[-0.035em] leading-[0.95] text-[clamp(3rem,6.5vw,6.5rem)]">
+        <h2 data-reveal className="font-grotesk font-light tracking-tight leading-[1.05] text-[clamp(3rem,6.5vw,6.5rem)]">
           {title.map((line) => (
             <span key={line} className="block">
               {line}

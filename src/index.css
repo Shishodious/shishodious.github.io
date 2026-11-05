@@ -258,6 +258,14 @@ body {
   border-radius: 2px;
 }
 
+/* ——— End screen: still gradient under the haze, for when the shader can't run ——— */
+.end-screen {
+  background:
+    radial-gradient(60% 45% at 18% 88%, rgb(var(--accent) / 0.85), transparent),
+    radial-gradient(50% 40% at 82% 55%, rgb(var(--accent) / 0.45), transparent),
+    rgb(var(--bg));
+}
+
 /* ——— Video placeholder: film-leader countdown sweep ——— */
 @keyframes leaderSweep {
   to { transform: rotate(360deg); }

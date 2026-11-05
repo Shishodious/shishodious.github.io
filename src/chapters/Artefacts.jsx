@@ -6,7 +6,7 @@ import SectionLink from "../shell/SectionLink";
 const Meta = ({ item }) => (
   <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
     <div>
-      <h3 className="font-fraunces uppercase tracking-[-0.01em] text-2xl md:text-3xl">{item.title}</h3>
+      <h3 className="font-grotesk font-light uppercase tracking-tight text-2xl md:text-3xl">{item.title}</h3>
       <p className="mt-1 text-sm text-muted">
         {item.client}
         {item.year && ` · ${item.year}`} — {item.role}
@@ -110,7 +110,7 @@ const Artefacts = ({ items, index = "02" }) => (
         <span className="font-mono text-xs text-muted tracking-[0.3em] uppercase">Work</span>
         <div className="flex-1 h-px bg-line" />
       </div>
-      <h2 className="mt-8 mb-16 md:mb-20 font-fraunces font-light tracking-[-0.03em] leading-none text-[clamp(2.25rem,5vw,4.5rem)]">
+      <h2 className="mt-8 mb-16 md:mb-20 font-grotesk font-light tracking-tight leading-[1.05] text-[clamp(2.25rem,5vw,4.5rem)]">
         Sites on the reel.
       </h2>
 
@@ -127,8 +127,8 @@ const Artefacts = ({ items, index = "02" }) => (
             Next on the reel
           </span>
           <span className="flex items-end justify-between gap-6">
-            <span className="font-fraunces font-light tracking-[-0.03em] leading-[0.95] text-[clamp(2rem,4vw,3.5rem)]">
-              Your brand<span className="italic">, here.</span>
+            <span className="font-grotesk font-light tracking-tight leading-[1.02] text-[clamp(2rem,4vw,3.5rem)]">
+              Your brand, here.
             </span>
             <HiOutlineArrowUpRight
               size={28}
