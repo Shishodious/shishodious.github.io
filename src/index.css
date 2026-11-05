@@ -258,6 +258,15 @@ body {
   border-radius: 2px;
 }
 
+/* ——— Video placeholder: film-leader countdown sweep ——— */
+@keyframes leaderSweep {
+  to { transform: rotate(360deg); }
+}
+.leader-sweep {
+  transform-origin: 50px 50px;
+  animation: leaderSweep 4s linear infinite;
+}
+
 /* ——— Reduced motion ——— */
 /* ——— Chooser: letter-by-letter roll into the accent colour ——— */
 .roll-char {
@@ -290,6 +299,7 @@ body {
   }
   .marquee-track,
   .scroll-bounce,
+  .leader-sweep,
   .grain {
     animation: none !important;
   }

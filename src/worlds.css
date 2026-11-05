@@ -32,6 +32,27 @@
   color-scheme: dark;
 }
 
+/* Panels inside the Video world's deck: the same tokens, re-toned per slide */
+[data-tone="bone"] {
+  --bg: 214 212 206;
+  --elev: 200 198 192;
+  --ink: 14 14 16;
+  --muted: 84 82 78;
+  --accent: 190 34 30;
+}
+[data-tone="ash"] {
+  --bg: 58 58 62;
+  --elev: 70 70 74;
+  --ink: 242 239 233;
+  --muted: 186 184 178;
+  --accent: 255 104 96;
+}
+
+/* The social rail floats over those light panels too, so it stays dark here */
+[data-world="video"] aside .lg-surface {
+  background: rgb(var(--elev) / 0.88);
+}
+
 /* Content Creation — warm and social: aubergine night, blush highlights */
 [data-world="content"] {
   --bg: 22 15 20;

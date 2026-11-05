@@ -2,8 +2,10 @@ import { lazy } from "react";
 import Home from "../components/Home";
 import WorldIntro from "../chapters/WorldIntro";
 import BrandHero from "../chapters/BrandHero";
+import VideoHero from "../chapters/VideoHero";
 import * as apps from "./apps";
 import * as brand from "./brand";
+import * as video from "./video";
 
 // Below-the-fold chapters are code-split and mounted only when scrolled near
 // (see LazySection). Hero chapters are imported eagerly and marked `eager`.
@@ -17,8 +19,17 @@ const CaseStudies = lazy(() => import("../chapters/CaseStudies"));
 const ProcessChapters = lazy(() => import("../chapters/ProcessChapters"));
 const Artefacts = lazy(() => import("../chapters/Artefacts"));
 const Deliverables = lazy(() => import("../chapters/Deliverables"));
+const VideoAbout = lazy(() => import("../chapters/VideoAbout"));
+const VideoSkills = lazy(() => import("../chapters/VideoSkills"));
+const ReelPanel = lazy(() => import("../chapters/ReelPanel"));
+const VideoFeature = lazy(() => import("../chapters/VideoFeature"));
 
 const contact = { id: "contact", nav: "Contact", component: Contact };
+
+// The Video world is a numbered deck: hero 01, about 02, skills 03, then one
+// panel per row of reels, so the numbers after that follow the reel data.
+const panelNumber = (n) => String(n).padStart(2, "0");
+const firstAfterReels = 4 + video.reelPanels.length;
 
 /**
  * Every service the studio offers. The chooser, nav switcher and routes are
@@ -36,7 +47,23 @@ export const services = [
     name: "Video Editing",
     word: "Video",
     tagline: "Cuts, colour and pacing that hold attention past the first second.",
-    chapters: [{ id: "home", eager: true, component: WorldIntro }, contact],
+    chapters: [
+      { id: "home", eager: true, component: VideoHero, props: { hero: video.hero } },
+      { id: "about", nav: "About", component: VideoAbout, props: { ...video.about, index: "02" } },
+      { id: "skills", nav: "Skills", component: VideoSkills, props: { ...video.skills, index: "03" } },
+      ...video.reelPanels.map((panel, i) => ({
+        id: i === 0 ? "work" : `work-${i + 1}`,
+        nav: i === 0 ? "Work" : undefined,
+        component: ReelPanel,
+        props: { ...panel, index: panelNumber(4 + i) },
+      })),
+      {
+        id: "feature",
+        component: VideoFeature,
+        props: { item: video.feature, index: panelNumber(firstAfterReels) },
+      },
+      { ...contact, props: { index: panelNumber(firstAfterReels + 1) } },
+    ],
   },
   {
     slug: "content",

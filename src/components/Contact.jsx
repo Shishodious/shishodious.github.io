@@ -5,7 +5,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import Lean from "./effects/Lean";
 
-const Contact = () => {
+const Contact = ({ index = "06" }) => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -38,12 +38,12 @@ const Contact = () => {
       ref={sectionRef}
       className="relative w-full bg-elev text-ink px-6 md:px-12 pt-28 md:pt-40 pb-10 overflow-hidden"
     >
-      <span className="section-watermark font-grotesk">06</span>
+      <span className="section-watermark font-grotesk">{index}</span>
 
       <div className="max-w-[1400px] mx-auto relative z-10">
         {/* Section label */}
         <div className="contact-reveal flex items-center gap-4 mb-14 md:mb-20">
-          <span className="font-mono text-xs text-accent tracking-[0.2em]">(06)</span>
+          <span className="font-mono text-xs text-accent tracking-[0.2em]">({index})</span>
           <span className="font-mono text-xs text-muted tracking-[0.3em] uppercase">
             Contact
           </span>
