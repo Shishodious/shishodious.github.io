@@ -126,6 +126,8 @@ const Chooser = () => {
       className="relative h-[100svh] min-h-[560px] overflow-hidden select-none"
     >
       <canvas ref={hazeRef} aria-hidden="true" className="absolute inset-0 w-full h-full" />
+      {/* Ends on the plain background, which is where the footer's haze starts */}
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
 
       <div className="relative z-10 h-full flex flex-col px-6 md:px-12 pt-24 md:pt-28 pb-6 md:pb-10">
         <div

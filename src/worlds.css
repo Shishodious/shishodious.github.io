@@ -22,13 +22,13 @@
 
 /* The home page — black and red, whichever option is hovered */
 [data-world="gate"] {
-  --bg: 9 9 11;
-  --elev: 18 18 22;
+  --bg: 5 3 3;
+  --elev: 18 16 16;
   --ink: 242 239 233;
-  --muted: 128 126 134;
-  --accent: 229 50 45;
-  --theme: #09090b;
-  --glow: 0.42;
+  --muted: 134 126 126;
+  --accent: 234 40 69;
+  --theme: #050303;
+  --glow: 0.55;
   color-scheme: dark;
 }
 

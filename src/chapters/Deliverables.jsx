@@ -23,7 +23,7 @@ const Deliverables = ({ items, index = "03", title = "Everything in the box." })
   }, []);
 
   return (
-    <section ref={ref} className="px-6 md:px-12 py-28 md:py-40 bg-elev">
+    <section ref={ref} className="px-6 md:px-12 py-28 md:py-40 bg-gradient-to-b from-elev from-60% to-bg">
       <div className="max-w-[1400px] mx-auto grid md:grid-cols-[1fr_1.3fr] gap-12 md:gap-20">
         <div>
           <div className="flex items-center gap-4">
