@@ -5,7 +5,7 @@ import Lean from "./effects/Lean";
 import ServiceSwitcher from "../shell/ServiceSwitcher";
 import SectionLink from "../shell/SectionLink";
 import { useActiveSection } from "../shell/sectionScroll";
-import { services } from "../services/registry";
+import { visibleServices } from "../services/registry";
 
 // The active pill overshoots a touch on arrival; the hover ghost just glides.
 const SLIDE =
@@ -214,7 +214,7 @@ const NavBar = ({ service }) => {
           Services
         </p>
         <ul className="mt-3 flex flex-wrap gap-2">
-          {services.map((s) => (
+          {visibleServices.map((s) => (
             <li key={s.slug}>
               <WorldLink
                 to={`/${s.slug}`}

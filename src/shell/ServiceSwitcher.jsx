@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "./WorldLink";
 import { HiChevronDown, HiOutlineSquares2X2 } from "react-icons/hi2";
-import { services } from "../services/registry";
+import { visibleServices } from "../services/registry";
 
 /** Nav pill naming the current world; opens a list to jump to another. */
 const ServiceSwitcher = ({ service }) => {
@@ -46,7 +46,7 @@ const ServiceSwitcher = ({ service }) => {
         }`}
       >
         <ul>
-          {services.map((s, i) => {
+          {visibleServices.map((s, i) => {
             const current = s.slug === service.slug;
             return (
               <li key={s.slug}>

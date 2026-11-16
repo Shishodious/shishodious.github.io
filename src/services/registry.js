@@ -135,7 +135,20 @@ export const services = [
   },
 ];
 
-export const findService = (slug) => services.find((s) => s.slug === slug);
+// Each service can be hidden from the live site without deleting its code:
+// set its VITE_SHOW_* env var to "false" (in .env.local, or as a build-time
+// env var on the host) and it drops out of the chooser, the nav pill and its
+// own route. Unset or anything else means shown — this never hides a page by
+// accident. See .env.example.
+const flags = {
+  video: import.meta.env.VITE_SHOW_VIDEO,
+  content: import.meta.env.VITE_SHOW_CONTENT,
+  brand: import.meta.env.VITE_SHOW_BRAND,
+  apps: import.meta.env.VITE_SHOW_APPS,
+};
+export const visibleServices = services.filter((s) => flags[s.slug] !== "false");
+
+export const findService = (slug) => visibleServices.find((s) => s.slug === slug);
 
 const LAST_KEY = "studio:last-service";
 
