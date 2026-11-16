@@ -6,6 +6,7 @@ import { lastService, visibleServices } from "../services/registry";
 import { createHaze } from "../components/effects/shaders/haze";
 import WorldLink from "../shell/WorldLink";
 import { worldColors } from "../shell/worldColors";
+import { setPageMeta } from "../services/meta";
 
 const Contact = lazy(() => import("../components/Contact"));
 
@@ -49,7 +50,12 @@ const Chooser = () => {
   const badgeRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Priyanshu Shishodia — Studio";
+    setPageMeta({
+      title: null,
+      description:
+        "Priyanshu Shishodia — video editing, content creation, brand websites and full-stack products, one person start to finish.",
+      path: "/",
+    });
   }, []);
 
   // The haze is decoration: skipped for reduced motion and without WebGL.
