@@ -17,7 +17,7 @@ const VideoAbout = ({ index, title, body, reel }) => (
           {body}
         </p>
       </div>
-      <VideoTile data-reveal item={reel} ratio="16 / 9" className="lg:col-span-7" />
+      <VideoTile data-reveal item={reel} ratio={reel.ratio ?? "16 / 9"} className="lg:col-span-7" />
     </div>
   </Panel>
 );
