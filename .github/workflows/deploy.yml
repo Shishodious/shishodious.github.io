@@ -39,8 +39,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Vite inlines these at build time (see .env.example) — set as
+      # repository Actions variables so a page can be hidden without a code
+      # change. Unset or anything other than "false" means shown.
       - name: Build
         run: npm run build
+        env:
+          VITE_SHOW_VIDEO: ${{ vars.VITE_SHOW_VIDEO }}
+          VITE_SHOW_CONTENT: ${{ vars.VITE_SHOW_CONTENT }}
+          VITE_SHOW_BRAND: ${{ vars.VITE_SHOW_BRAND }}
+          VITE_SHOW_APPS: ${{ vars.VITE_SHOW_APPS }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
