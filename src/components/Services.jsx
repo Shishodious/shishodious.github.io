@@ -1,59 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  HiOutlineGlobeAlt,
-  HiOutlineServerStack,
-  HiOutlineShoppingBag,
-  HiOutlineSignal,
-  HiOutlineSparkles,
-  HiOutlineSquare3Stack3D,
-} from "react-icons/hi2";
-
-const services = [
-  {
-    id: "01",
-    title: "Full-Stack Web Apps",
-    icon: HiOutlineSquare3Stack3D,
-    description:
-      "Complete products — React and Next.js frontends backed by Node or NestJS APIs, taken from first commit to production.",
-  },
-  {
-    id: "02",
-    title: "AI-Integrated Products",
-    icon: HiOutlineSparkles,
-    description:
-      "Language and vision models wired into real product surfaces — multimodal pipelines, embeddings and vector search, structured extraction from messy input, and queue-driven processing built for production volume.",
-  },
-  {
-    id: "03",
-    title: "Backend & API Systems",
-    icon: HiOutlineServerStack,
-    description:
-      "REST APIs with authentication, role-based access, job queues, and system design that holds up as usage grows.",
-  },
-  {
-    id: "04",
-    title: "Realtime Applications",
-    icon: HiOutlineSignal,
-    description:
-      "Live chat, tracking, and notifications over WebSockets — engineered for concurrent users, not demos.",
-  },
-  {
-    id: "05",
-    title: "E-commerce Builds",
-    icon: HiOutlineShoppingBag,
-    description:
-      "Storefronts with product management, carts, and order processing wired to real business logic.",
-  },
-  {
-    id: "06",
-    title: "Automation & Scraping",
-    icon: HiOutlineGlobeAlt,
-    description:
-      "Structured data extraction at scale — rate-limited, retry-safe crawlers exposed through clean APIs.",
-  },
-];
 
 // Registration ticks in each corner — the card reads as a spec sheet.
 const CORNERS = [
@@ -147,7 +94,7 @@ const ServiceCard = (service) => {
   );
 };
 
-const Services = () => {
+const Services = ({ items }) => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -202,7 +149,7 @@ const Services = () => {
 
         {/* Service cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-          {services.map((service) => (
+          {items.map((service) => (
             <div key={service.id} className="service-row">
               <ServiceCard {...service} />
             </div>

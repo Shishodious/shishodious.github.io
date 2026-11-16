@@ -9,86 +9,6 @@ import {
 } from "react-icons/hi2";
 import Lean from "./effects/Lean";
 import { createBendingReel } from "./effects/bendingReel";
-import momentum from "../assets/momentum.jpg";
-import creatorvision from "../assets/creatorvision.jpg";
-import videotube from "../assets/videotube.jpg";
-import uber from "../assets/uber.jpg";
-import chatapp from "../assets/chatapp.jpg";
-import oversocs from "../assets/oversocs.jpg";
-import autocrawler from "../assets/autocrawler.jpg";
-
-const projects = [
-  {
-    id: "01",
-    src: momentum,
-    title: "Momentum",
-    description:
-      "AI marketing engine built at Hypeliv — turns a plain-language brief into on-brand images, short-form reels, UGC presenter videos, and carousels, then schedules and auto-publishes them straight to Instagram, LinkedIn, YouTube, and TikTok. NestJS backend spanning ~55 modules with BullMQ workers, a multi-provider model layer (Anthropic, Google GenAI, ElevenLabs) behind per-provider spend tracking, and a Next.js 16 admin surface for brand context, planning, and publishing.",
-    tags: ["Next.js", "NestJS", "Drizzle", "PostgreSQL", "BullMQ", "Anthropic", "Google GenAI"],
-    demoLink: "https://momentum.hypeliv.com",
-    codeLink: null,
-  },
-  {
-    id: "02",
-    src: creatorvision,
-    title: "Creator Vision",
-    description:
-      "AI brand-detection and creator-analytics platform built at Hypeliv — a multi-signal pipeline (Gemini vision, audio transcription, on-screen OCR) that finds brands inside TikTok and YouTube videos and rolls detections into earned-media-value reports. BullMQ-driven processing across 46 backend modules.",
-    tags: ["NestJS", "BullMQ", "PostgreSQL", "pgvector", "Google AI", "AWS"],
-    demoLink: null,
-    codeLink: null,
-  },
-  {
-    id: "03",
-    src: autocrawler,
-    title: "AutoCrawler",
-    description:
-      "Web scraping and automation tool — structured data extraction at scale with rate limiting, retries, and a UI to configure crawls and inspect results.",
-    tags: ["Node.js", "Puppeteer", "REST API"],
-    demoLink: "https://auto-crawler.vercel.app",
-    codeLink: "https://github.com/Shishodious/AutoCrawler",
-  },
-  {
-    id: "04",
-    src: chatapp,
-    title: "Chat-App",
-    description:
-      "Realtime one-on-one and group messaging with instant delivery, file sharing, and a UI tested with 100+ concurrent users.",
-    tags: ["Socket.io", "React", "Node.js"],
-    demoLink: "https://chat-app-client-two-gamma.vercel.app/",
-    codeLink: "https://github.com/Shishodious/ChatAPP-Client",
-  },
-  {
-    id: "05",
-    src: videotube,
-    title: "VideoTube",
-    description:
-      "Full-stack video-sharing platform (YouTube clone) — users register, upload videos to Cloudinary with auto-thumbnails, then watch, search, like, comment, subscribe, and build playlists. Monorepo with an Express/MongoDB REST API and a React 19 SPA, secured by JWT access/refresh tokens.",
-    tags: ["React", "Node.js", "Express", "MongoDB", "Cloudinary", "JWT"],
-    demoLink: "https://video-tube-server-blush.vercel.app/",
-    codeLink: "https://github.com/Shishodious/VideoTube",
-  },
-  {
-    id: "06",
-    src: oversocs,
-    title: "Oversocs",
-    description:
-      "E-commerce for exclusive socks — filtered product listings serving 500+ daily visitors, secure auth with cart and checkout, GSAP and Framer Motion micro-interactions.",
-    tags: ["React", "Node.js", "GSAP", "Framer Motion"],
-    demoLink: "https://oversocs-d86z.vercel.app/",
-    codeLink: "https://github.com/Shishodious/OVERSOCS",
-  },
-  {
-    id: "07",
-    src: uber,
-    title: "Uber Clone",
-    description:
-      "Full-stack ride-booking platform — live trip tracking over WebSockets for rider and driver roles, Google Maps routing with fare calculation, JWT-protected routes throughout.",
-    tags: ["React", "Maps API", "WebSockets", "JWT"],
-    demoLink: "https://uber-zeta-woad.vercel.app/",
-    codeLink: "https://github.com/Shishodious/UBER",
-  },
-];
 
 // The reel needs room to breathe and a user who's fine with motion.
 const REEL_QUERY =
@@ -109,14 +29,14 @@ const useMediaQuery = (query) => {
 const pad = (n) => String(n).padStart(2, "0");
 
 // `compact` tightens the label-to-heading gap so the pinned reel fits one screen.
-const SectionHeader = ({ className = "", compact, rail, aside }) => (
+const SectionHeader = ({ className = "", compact, rail, aside, eyebrow = "Selected Work" }) => (
   <div className={className}>
     <div
       className={`flex items-center gap-4 ${compact ? "mb-6 lg:mb-8" : "mb-14 md:mb-20"}`}
     >
       <span className="font-mono text-xs text-accent tracking-[0.2em]">(05)</span>
       <span className="font-mono text-xs text-muted tracking-[0.3em] uppercase">
-        Selected Work
+        {eyebrow}
       </span>
       <div className="relative flex-1 h-px bg-line overflow-hidden">{rail}</div>
       {aside}
@@ -185,7 +105,7 @@ const ReelButton = ({ label, disabled, onClick, children }) => (
  * The caption below follows whichever project is centred; the arrows and a
  * click on any panel scroll the page to that project's spot in the pin.
  */
-const ProjectReel = () => {
+const ProjectReel = ({ projects, eyebrow }) => {
   const pinRef = useRef(null);
   const canvasRef = useRef(null);
   const railRef = useRef(null);
@@ -239,7 +159,7 @@ const ProjectReel = () => {
       trigger.kill();
       reel.destroy();
     };
-  }, []);
+  }, [projects]);
 
   const goTo = (index) => {
     const trigger = triggerRef.current;
@@ -276,6 +196,7 @@ const ProjectReel = () => {
         <span className="section-watermark font-grotesk">05</span>
 
         <SectionHeader
+          eyebrow={eyebrow}
           compact
           className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-24 lg:pt-28"
           rail={
@@ -380,7 +301,7 @@ const ProjectReel = () => {
  * The plain two-column grid — used on small or short screens and when reduced
  * motion is requested, where a pinned, scroll-driven reel would get in the way.
  */
-const ProjectGrid = () => {
+const ProjectGrid = ({ projects, eyebrow }) => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -417,7 +338,7 @@ const ProjectGrid = () => {
       <span className="section-watermark font-grotesk">05</span>
 
       <div className="max-w-[1400px] mx-auto relative z-10">
-        <SectionHeader className="mb-16 md:mb-24" />
+        <SectionHeader className="mb-16 md:mb-24" eyebrow={eyebrow} />
 
         {/* Projects */}
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-16 md:gap-y-24">
@@ -519,10 +440,9 @@ const ProjectGrid = () => {
   );
 };
 
-
-const Portfolio = () => {
+const Portfolio = (props) => {
   const reel = useMediaQuery(REEL_QUERY);
-  return reel ? <ProjectReel /> : <ProjectGrid />;
+  return reel ? <ProjectReel {...props} /> : <ProjectGrid {...props} />;
 };
 
 export default Portfolio;

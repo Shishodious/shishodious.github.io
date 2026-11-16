@@ -6,12 +6,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg: "#0d0c0a",
-        elev: "#14120f",
-        ink: "#ede8df",
-        muted: "#8e887a",
-        accent: "#ff5c28",
-        line: "rgba(237,232,223,0.08)",
+        // Channels come from the active world in src/worlds.css.
+        bg: "rgb(var(--bg) / <alpha-value>)",
+        elev: "rgb(var(--elev) / <alpha-value>)",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        line: "rgb(var(--ink) / 0.08)",
       },
       fontFamily: {
         grotesk: ['"Space Grotesk"', "sans-serif"],

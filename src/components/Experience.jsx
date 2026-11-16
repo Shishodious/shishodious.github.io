@@ -2,33 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const experiences = [
-  {
-    company: "Hypeliv",
-    role: "Software Engineer — Current",
-    summary:
-      "Engineered and delivered a production website for a US-based client using React with a headless CMS backend.",
-    points: [
-      "Built backend services for an AI-powered creator analytics platform with NestJS, BullMQ for async job queues, and PostgreSQL via TypeORM.",
-      "Integrated AWS S3, Rekognition, and SES for media storage, content moderation, and transactional email.",
-      "Took part in code reviews, debugging sessions, and sprint planning to drive iterative delivery.",
-    ],
-    stack: ["React", "NestJS", "BullMQ", "PostgreSQL", "TypeORM", "AWS"],
-  },
-  {
-    company: "Techkrate",
-    role: "Full Stack Developer Intern",
-    summary:
-      "Architected and delivered backend modules for a production e-commerce platform on Node.js, Express, and MongoDB.",
-    points: [
-      "Built secure REST APIs for product management, cart, and order processing with JWT authentication and role-based access control.",
-      "Implemented responsive product listings and checkout flows in React, wired to backend business logic.",
-    ],
-    stack: ["Node.js", "Express", "MongoDB", "React", "JWT"],
-  },
-];
-
-const Experience = () => {
+const Experience = ({ experiences }) => {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
   const fillRef = useRef(null);

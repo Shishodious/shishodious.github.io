@@ -1,0 +1,90 @@
+/* src/worlds.css
+ *
+ * Each service is a "world": one set of colour channels that every Tailwind
+ * token (bg, elev, ink, muted, accent, line) reads through. Layout sets
+ * data-world on <html>, so switching service recolours the whole shell.
+ * Channels are bare "r g b" triples so Tailwind's /<alpha> modifiers work.
+ * --glow is how strongly the chooser's haze tints toward the accent.
+ */
+
+/* Apps & Products (and the fallback) — the original warm black and orange */
+:root,
+[data-world="apps"] {
+  --bg: 13 12 10;
+  --elev: 20 18 15;
+  --ink: 237 232 223;
+  --muted: 142 136 122;
+  --accent: 255 92 40;
+  --theme: #0d0c0a;
+  --glow: 0.5;
+  color-scheme: dark;
+}
+
+/* The home page — black and red, whichever option is hovered */
+[data-world="gate"] {
+  --bg: 5 3 3;
+  --elev: 18 16 16;
+  --ink: 242 239 233;
+  --muted: 134 126 126;
+  --accent: 234 40 69;
+  --theme: #050303;
+  --glow: 0.55;
+  color-scheme: dark;
+}
+
+/* Video Editing — dark cinema: cold black, bone white, projector red */
+[data-world="video"] {
+  --bg: 9 9 11;
+  --elev: 18 18 22;
+  --ink: 242 239 233;
+  --muted: 128 126 134;
+  --accent: 229 50 45;
+  --theme: #09090b;
+  --glow: 0.3;
+  color-scheme: dark;
+}
+
+/* Panels inside the Video world's deck: the same tokens, re-toned per slide */
+[data-tone="bone"] {
+  --bg: 214 212 206;
+  --elev: 200 198 192;
+  --ink: 14 14 16;
+  --muted: 84 82 78;
+  --accent: 190 34 30;
+}
+[data-tone="ash"] {
+  --bg: 58 58 62;
+  --elev: 70 70 74;
+  --ink: 242 239 233;
+  --muted: 186 184 178;
+  --accent: 255 104 96;
+}
+
+/* The social rail floats over those light panels too, so it stays dark here */
+[data-world="video"] aside .lg-surface {
+  background: rgb(var(--elev) / 0.88);
+}
+
+/* Content Creation — warm and social: aubergine night, blush highlights */
+[data-world="content"] {
+  --bg: 22 15 20;
+  --elev: 33 23 30;
+  --ink: 246 233 228;
+  --muted: 160 138 148;
+  --accent: 255 122 168;
+  --theme: #160f14;
+  --glow: 0.42;
+  color-scheme: dark;
+}
+
+/* Brand Websites — light paper, ink black, A24 red */
+[data-world="brand"] {
+  --bg: 239 237 233;
+  --elev: 230 227 221;
+  --ink: 18 18 18;
+  --muted: 111 107 102;
+  --accent: 212 42 31;
+  --theme: #efede9;
+  --glow: 0.28;
+  color-scheme: light;
+}
