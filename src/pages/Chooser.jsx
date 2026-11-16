@@ -2,10 +2,11 @@ import { Fragment, lazy, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import LazySection from "../components/LazySection";
-import { lastService, services } from "../services/registry";
+import { lastService, visibleServices } from "../services/registry";
 import { createHaze } from "../components/effects/shaders/haze";
 import WorldLink from "../shell/WorldLink";
 import { worldColors } from "../shell/worldColors";
+import { setPageMeta } from "../services/meta";
 
 const Contact = lazy(() => import("../components/Contact"));
 
@@ -49,7 +50,12 @@ const Chooser = () => {
   const badgeRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Priyanshu Shishodia — Studio";
+    setPageMeta({
+      title: null,
+      description:
+        "Priyanshu Shishodia — video editing, content creation, brand websites and full-stack products, one person start to finish.",
+      path: "/",
+    });
   }, []);
 
   // The haze is decoration: skipped for reduced motion and without WebGL.
@@ -116,8 +122,8 @@ const Chooser = () => {
     e.preventDefault();
   };
 
-  const current = services.find((s) => s.slug === active);
-  const index = current ? services.indexOf(current) + 1 : null;
+  const current = visibleServices.find((s) => s.slug === active);
+  const index = current ? visibleServices.indexOf(current) + 1 : null;
 
   return (
     <>
@@ -143,7 +149,7 @@ const Chooser = () => {
           onKeyDown={onKeyDown}
           className="my-auto"
         >
-          {services.map((service, i) => {
+          {visibleServices.map((service, i) => {
             const on = active === service.slug;
             const dim = active && !on;
             return (
@@ -194,7 +200,7 @@ const Chooser = () => {
           className="grid sm:grid-cols-[auto_1fr] md:grid-cols-[12rem_1fr_auto] items-end gap-x-6 gap-y-2 border-t border-line pt-4 md:pt-5 font-mono text-[11px] tracking-[0.25em] uppercase text-muted transition-colors duration-500"
         >
           <p className="hidden sm:block text-ink tabular-nums">
-            {index ? `0${index}` : "00"} <span className="text-muted">/ 0{services.length}</span>
+            {index ? `0${index}` : "00"} <span className="text-muted">/ 0{visibleServices.length}</span>
           </p>
           <p
             key={active ?? "none"}

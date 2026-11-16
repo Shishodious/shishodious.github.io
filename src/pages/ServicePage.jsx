@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import LazySection from "../components/LazySection";
 import { findService, rememberService } from "../services/registry";
+import { setPageMeta } from "../services/meta";
 
 /** Renders one service world as its ordered list of chapters. */
 const ServicePage = () => {
@@ -11,7 +12,7 @@ const ServicePage = () => {
   useEffect(() => {
     if (!service) return;
     rememberService(service.slug);
-    document.title = `${service.name} — Priyanshu Shishodia`;
+    setPageMeta({ title: service.name, description: service.tagline, path: `/${service.slug}` });
   }, [service]);
 
   if (!service) return <Navigate to="/" replace />;
