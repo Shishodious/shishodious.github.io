@@ -138,7 +138,7 @@ const Chooser = () => {
       <div className="relative z-10 h-full flex flex-col px-6 md:px-12 pt-24 md:pt-28 pb-6 md:pb-10">
         <div
           data-fade
-          className="flex items-baseline justify-between font-mono text-[11px] tracking-[0.3em] uppercase text-muted transition-colors duration-500"
+          className="flex items-baseline justify-between font-mono text-[13px] md:text-sm tracking-[0.3em] uppercase text-muted transition-colors duration-500"
         >
           <h1>What can I do for you?</h1>
           <p className="hidden sm:block">Choose one — switch anytime</p>
@@ -147,7 +147,7 @@ const Chooser = () => {
         <ul
           onPointerLeave={() => setActive(null)}
           onKeyDown={onKeyDown}
-          className="my-auto"
+          className="my-auto flex flex-col gap-5 md:gap-0"
         >
           {visibleServices.map((service, i) => {
             const on = active === service.slug;
@@ -172,7 +172,7 @@ const Chooser = () => {
                   <span className="block min-w-0 overflow-hidden py-[0.04em]">
                     <span
                       data-rise
-                      className="block font-grotesk font-light tracking-tight leading-[1.15] text-ink text-[clamp(2.25rem,min(7vw,15svh),10rem)] transition-colors duration-500"
+                      className="block whitespace-normal md:whitespace-nowrap font-grotesk font-light tracking-tight leading-[1.2] md:leading-[1.15] text-ink text-[clamp(1.85rem,min(4.4vw,9svh),5.5rem)] transition-colors duration-500"
                     >
                       <RollLabel label={service.door} on={on} />
                     </span>

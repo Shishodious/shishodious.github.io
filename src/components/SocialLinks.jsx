@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { HiOutlineDocumentArrowDown } from "react-icons/hi2";
 import { useLiquidGlass } from "./effects/liquid-glass/useLiquidGlass";
@@ -19,12 +19,18 @@ const links = [
   },
   {
     id: 3,
+    label: "Instagram",
+    icon: <FaInstagram size={16} />,
+    href: "https://www.instagram.com/pryyshuu/",
+  },
+  {
+    id: 4,
     label: "Email",
     icon: <HiOutlineMail size={16} />,
     href: "mailto:priyanshushishodia008@gmail.com",
   },
   {
-    id: 4,
+    id: 5,
     label: "Resume",
     icon: <HiOutlineDocumentArrowDown size={16} />,
     href: "/Resume.pdf",

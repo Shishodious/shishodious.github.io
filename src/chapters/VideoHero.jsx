@@ -5,7 +5,7 @@ import { PanelNumber } from "./Panel";
 import VideoTile from "./VideoTile";
 
 // Tile width drives the gap below, so the name and word always overlap its edges.
-const TILE = "clamp(15rem, min(38vw, 58svh), 34rem)";
+const TILE = "clamp(18rem, min(50vw, 62svh), 44rem)";
 
 /** Opening panel: a tilted video behind the name and one enormous word. */
 const VideoHero = ({ hero }) => {
@@ -41,7 +41,7 @@ const VideoHero = ({ hero }) => {
       <div className="relative flex flex-col items-center">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[var(--tile)]">
           <div data-drift>
-            <VideoTile data-tile item={hero.reel} ratio="4 / 3" sound={false} className="-rotate-6" />
+            <VideoTile data-tile item={hero.reel} ratio={hero.reel.ratio || "16 / 9"} sound={false} className="-rotate-6" />
           </div>
         </div>
 

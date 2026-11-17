@@ -35,12 +35,20 @@ const Player = ({ item, sound, onFail }) => {
   useEffect(() => {
     if (reduced) return;
     const video = ref.current;
+    // Safari (notably iOS) only allows unprompted autoplay when the `muted`
+    // HTML attribute is literally present at play() time — React only sets
+    // the JS property, so it has to be written to the element by hand.
+    video.muted = true;
+    video.setAttribute("muted", "");
+    video.defaultMuted = true;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           video.play().catch(() => {});
         } else {
           video.muted = true;
+          video.setAttribute("muted", "");
           video.pause();
         }
       },
@@ -53,10 +61,15 @@ const Player = ({ item, sound, onFail }) => {
   const toggleSound = () => {
     const video = ref.current;
     if (video.muted) {
-      if (audible && audible !== video) audible.muted = true;
+      if (audible && audible !== video) {
+        audible.muted = true;
+        audible.setAttribute("muted", "");
+      }
       audible = video;
     }
     video.muted = !video.muted;
+    if (video.muted) video.setAttribute("muted", "");
+    else video.removeAttribute("muted");
   };
 
   return (
