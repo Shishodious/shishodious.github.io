@@ -11,7 +11,13 @@ export const hero = {
   name: "Priyanshu Shishodia",
   word: "Portfolio",
   role: "Video Editor",
-  reel: { id: "hero", title: "Showreel loop", src: null },
+  reel: {
+    id: "office-clones",
+    title: "Office Clones",
+    ratio: "16 / 9",
+    src: "/video/office-clones.mp4",
+    poster: "/video/office-clones.jpg",
+  },
 };
 
 export const about = {
@@ -51,13 +57,13 @@ export const work = {
   title: "My work",
   edits: [
     {
-      id: "office-clones",
-      title: "Office Clones",
-      length: "0:10",
+      id: "gym-car-wheel",
+      title: "Gym × Car Wheel",
+      length: "0:08",
       ratio: "16 / 9",
       tone: "bone",
-      src: "/video/office-clones.mp4",
-      poster: "/video/office-clones.jpg",
+      src: "/video/gym-car-wheel.mp4",
+      poster: "/video/gym-car-wheel.jpg",
     },
     {
       id: "game-to-bike",
@@ -66,15 +72,6 @@ export const work = {
       ratio: "16 / 9",
       src: "/video/game-to-bike.mp4",
       poster: "/video/game-to-bike.jpg",
-    },
-    {
-      id: "gym-car-wheel",
-      title: "Gym × Car Wheel",
-      length: "0:08",
-      ratio: "16 / 9",
-      tone: "ash",
-      src: "/video/gym-car-wheel.mp4",
-      poster: "/video/gym-car-wheel.jpg",
     },
   ],
 };

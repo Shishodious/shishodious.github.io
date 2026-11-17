@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import Lean from "./effects/Lean";
 import EndScreen from "./EndScreen";
@@ -80,21 +80,27 @@ const Contact = ({ index = "06", service }) => {
           {/* Left — socials */}
           <div className="contact-reveal md:col-span-4 space-y-8">
             <p className="text-muted font-light text-base leading-[1.85] max-w-sm">
-              Taking on freelance projects and open to full-time roles —
-              on-site or remote. The form works, or just say hi on either
-              of these.
+              Open to freelance edits, collabs, and full-time roles —
+              on-site or remote. Video editing, content, brand sites, or
+              products — the form works, or just say hi on either of
+              these.
             </p>
             <div className="flex flex-col gap-1">
               {[
                 {
-                  label: "LinkedIn",
+                  label: "priyanshu-shishodia",
                   icon: <FaLinkedin size={15} />,
                   href: "https://www.linkedin.com/in/priyanshu-shishodia",
                 },
                 {
-                  label: "GitHub",
+                  label: "Shishodious",
                   icon: <FaGithub size={15} />,
                   href: "https://github.com/Shishodious",
+                },
+                {
+                  label: "pryyshuu",
+                  icon: <FaInstagram size={15} />,
+                  href: "https://www.instagram.com/pryyshuu/",
                 },
               ].map(({ label, icon, href }) => (
                 <a
@@ -147,6 +153,18 @@ const Contact = ({ index = "06", service }) => {
                     name="email"
                     required
                     placeholder="your@email.com"
+                    className="w-full bg-transparent border-b border-ink/15 py-3 text-ink text-base font-light placeholder:text-ink/25
+                               focus:outline-none focus:border-accent transition-colors duration-300"
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2 font-mono text-[10px] tracking-[0.25em] text-muted uppercase">
+                    Phone <span className="normal-case text-ink/30">(optional)</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+1 (555) 000-0000"
                     className="w-full bg-transparent border-b border-ink/15 py-3 text-ink text-base font-light placeholder:text-ink/25
                                focus:outline-none focus:border-accent transition-colors duration-300"
                   />

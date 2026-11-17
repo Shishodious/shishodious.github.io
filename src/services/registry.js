@@ -61,7 +61,7 @@ export const services = [
     slug: "video",
     name: "Video Editing",
     word: "Video",
-    door: "Video editing",
+    door: "edit a video?",
     tagline: "Cuts, colour and pacing that hold attention past the first second.",
     chapters: [
       { id: "home", eager: true, component: VideoHero, props: { hero: video.hero } },
@@ -75,7 +75,7 @@ export const services = [
     slug: "content",
     name: "Content Creation",
     word: "Content",
-    door: "Content creation",
+    door: "create content?",
     tagline: "Short-form that sounds like you and lands with the people you want.",
     chapters: [{ id: "home", eager: true, component: WorldIntro }, contact],
   },
@@ -83,7 +83,7 @@ export const services = [
     slug: "brand",
     name: "Brand Websites",
     word: "Brand",
-    door: "Brand presence",
+    door: "increase your brand's presence?",
     tagline: "Sites that feel like the brand before anyone reads a word.",
     chapters: [
       {
@@ -113,7 +113,7 @@ export const services = [
     slug: "apps",
     name: "Apps & Products",
     word: "Products",
-    door: "Product development",
+    door: "develop a custom product?",
     tagline: "Full-stack products and AI systems, from first commit to production.",
     chapters: [
       { id: "home", eager: true, component: Home },
