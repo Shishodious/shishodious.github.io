@@ -12,11 +12,11 @@ export const hero = {
   word: "Portfolio",
   role: "Video Editor",
   reel: {
-    id: "office-clones",
-    title: "Office Clones",
-    ratio: "16 / 9",
-    src: "/video/office-clones.mp4",
-    poster: "/video/office-clones.jpg",
+    id: "batman",
+    title: "Batman",
+    ratio: "4 / 3",
+    src: "/video/batman.mp4",
+    poster: "/video/batman.jpg",
   },
 };
 
@@ -24,11 +24,11 @@ export const about = {
   title: ["A little", "about me"],
   body: "Hi, I'm Priyanshu. I edit video that holds attention past the first second: clean cuts, considered colour, and pacing built around the story you're telling.",
   reel: {
-    id: "office-thorfinn",
-    title: "Office × Thorfinn",
-    ratio: "1920 / 824",
-    src: "/video/office-thorfinn.mp4",
-    poster: "/video/office-thorfinn.jpg",
+    id: "office-clones",
+    title: "Office Clones",
+    ratio: "16 / 9",
+    src: "/video/office-clones.mp4",
+    poster: "/video/office-clones.jpg",
   },
 };
 
@@ -56,6 +56,14 @@ export const reelPanels = [];
 export const work = {
   title: "My work",
   edits: [
+    {
+      id: "office-thorfinn",
+      title: "Office × Thorfinn",
+      length: "0:33",
+      ratio: "1920 / 824",
+      src: "/video/office-thorfinn.mp4",
+      poster: "/video/office-thorfinn.jpg",
+    },
     {
       id: "gym-car-wheel",
       title: "Gym × Car Wheel",

@@ -27,7 +27,7 @@ export const Leader = ({ title, ratio }) => (
  * Muted loop that only plays while on screen. Reduced-motion visitors get
  * native controls and nothing starts by itself.
  */
-const Player = ({ item, sound, onFail }) => {
+const Player = ({ item, sound, soundAt, onFail }) => {
   const ref = useRef(null);
   const [muted, setMuted] = useState(true);
   const [reduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -94,7 +94,7 @@ const Player = ({ item, sound, onFail }) => {
           onClick={toggleSound}
           aria-label={muted ? `Play ${item.title} with sound` : `Mute ${item.title}`}
           aria-pressed={!muted}
-          className="absolute bottom-2 right-2 w-11 h-11 grid place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm cursor-pointer transition-colors duration-300 hover:bg-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className={`absolute ${soundAt} w-11 h-11 grid place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm cursor-pointer transition-colors duration-300 hover:bg-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
         >
           {muted ? <HiOutlineSpeakerXMark size={18} /> : <HiOutlineSpeakerWave size={18} />}
         </button>
@@ -108,7 +108,7 @@ const Player = ({ item, sound, onFail }) => {
  * whichever tone of panel it sits on. A missing or broken file falls back to
  * the placeholder rather than an empty frame.
  */
-const VideoTile = ({ item, ratio, sound = true, className = "", ...rest }) => {
+const VideoTile = ({ item, ratio, sound = true, soundAt = "bottom-2 right-2", className = "", ...rest }) => {
   const [failed, setFailed] = useState(false);
 
   return (
@@ -119,7 +119,7 @@ const VideoTile = ({ item, ratio, sound = true, className = "", ...rest }) => {
       className={`relative overflow-hidden rounded-xl md:rounded-2xl border border-ink/25 bg-elev text-ink shadow-[0_24px_50px_-28px_rgba(0,0,0,0.6)] ${className}`}
     >
       {item.src && !failed ? (
-        <Player item={item} sound={sound} onFail={() => setFailed(true)} />
+        <Player item={item} sound={sound} soundAt={soundAt} onFail={() => setFailed(true)} />
       ) : (
         <Leader title={item.title} ratio={ratio} />
       )}

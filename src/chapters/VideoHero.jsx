@@ -41,7 +41,7 @@ const VideoHero = ({ hero }) => {
       <div className="relative flex flex-col items-center">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[var(--tile)]">
           <div data-drift>
-            <VideoTile data-tile item={hero.reel} ratio={hero.reel.ratio || "16 / 9"} sound={false} className="-rotate-6" />
+            <VideoTile data-tile item={hero.reel} ratio={hero.reel.ratio || "16 / 9"} soundAt="top-2 right-2" className="-rotate-6" />
           </div>
         </div>
 
