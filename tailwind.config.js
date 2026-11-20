@@ -18,6 +18,8 @@ module.exports = {
         grotesk: ['"Space Grotesk"', "sans-serif"],
         fraunces: ["Fraunces", "serif"],
         mono: ['"JetBrains Mono"', "monospace"],
+        display: ['"Bootzy TM"', "Impact", "sans-serif"],
+        helvetica: ['"Helvetica Neue"', "Helvetica", "Arial", "sans-serif"],
       },
       transitionDuration: {
         350: "350ms",

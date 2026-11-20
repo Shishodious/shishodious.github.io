@@ -4,16 +4,16 @@
 > full-stack product development, start to finish.
 
 Priyanshu Shishodia is a video editor and full-stack developer. The site
-is a small studio gate: one person, four services, each with its own
+is a small studio gate: one person, three services, each with its own
 work samples and contact point.
 
 ## Services
 
-- [Video editing](https://shishodious.github.io/video): cuts, colour and
-  pacing for short-form, ads, podcasts, corporate films and documentary —
-  tools include CapCut, DaVinci Resolve, After Effects and Premiere Pro.
-- [Content creation](https://shishodious.github.io/content): short-form
-  content built around a creator's voice and audience.
+- [Video editing & content creation](https://shishodious.github.io/video):
+  cuts, colour and pacing for short-form, ads, podcasts, corporate films and
+  documentary, plus short-form content built around a creator's voice and
+  audience — tools include CapCut, DaVinci Resolve, After Effects and
+  Premiere Pro.
 - [Brand websites](https://shishodious.github.io/brand): brand-led
   marketing sites, from process through SEO/AEO to the finished build.
 - [Apps & products](https://shishodious.github.io/apps): full-stack web

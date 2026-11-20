@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import Home from "../components/Home";
-import WorldIntro from "../chapters/WorldIntro";
 import BrandHero from "../chapters/BrandHero";
 import VideoHero from "../chapters/VideoHero";
 import * as apps from "./apps";
@@ -61,8 +60,8 @@ export const services = [
     slug: "video",
     name: "Video Editing",
     word: "Video",
-    door: "edit a video?",
-    tagline: "Cuts, colour and pacing that hold attention past the first second.",
+    door: "edit and create content?",
+    tagline: "Edits and short-form content that hold attention past the first second.",
     chapters: [
       { id: "home", eager: true, component: VideoHero, props: { hero: video.hero } },
       { id: "about", nav: "About", component: VideoAbout, props: { ...video.about, index: "02" } },
@@ -70,14 +69,6 @@ export const services = [
       ...videoWork,
       { ...contact, props: { index: panelNumber(4 + videoWork.length) } },
     ],
-  },
-  {
-    slug: "content",
-    name: "Content Creation",
-    word: "Content",
-    door: "create content?",
-    tagline: "Short-form that sounds like you and lands with the people you want.",
-    chapters: [{ id: "home", eager: true, component: WorldIntro }, contact],
   },
   {
     slug: "brand",
@@ -142,7 +133,6 @@ export const services = [
 // accident. See .env.example.
 const flags = {
   video: import.meta.env.VITE_SHOW_VIDEO,
-  content: import.meta.env.VITE_SHOW_CONTENT,
   brand: import.meta.env.VITE_SHOW_BRAND,
   apps: import.meta.env.VITE_SHOW_APPS,
 };

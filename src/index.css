@@ -2,6 +2,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap');
 
+/* Bootzy TM — display face for the chooser's top labels */
+@font-face {
+  font-family: "Bootzy TM";
+  src: url("./assets/fonts/BootzyTM.woff2") format("woff2"),
+    url("./assets/fonts/BootzyTM.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -275,6 +285,42 @@ body {
   animation: leaderSweep 4s linear infinite;
 }
 
+/* ——— Chooser: the ring of service titles around the centre pebble ——— */
+.pebble {
+  border-radius: 47% 53% 44% 56% / 36% 38% 62% 64%;
+  animation: pebbleMorph 14s ease-in-out infinite alternate;
+}
+@keyframes pebbleMorph {
+  50% { border-radius: 53% 47% 55% 45% / 40% 33% 67% 60%; }
+  100% { border-radius: 45% 55% 48% 52% / 33% 41% 59% 67%; }
+}
+/* --fill runs 1 (front of the ring, solid) to 0 (sides, outline only) */
+.ring-title {
+  color: rgb(var(--ink) / var(--fill, 1));
+  -webkit-text-stroke: 1.5px rgb(var(--ink) / calc(0.45 + var(--fill, 1) * 0.55));
+}
+.ring-door {
+  opacity: var(--fill, 1);
+}
+.pan {
+  animation: pan 7s ease-in-out infinite alternate;
+}
+/* Apps door widgets bob gently, and only while that door is in front */
+.os-float {
+  animation: osFloat 6s ease-in-out infinite alternate;
+}
+.os-board[data-on="false"] .os-float {
+  animation-play-state: paused;
+}
+@keyframes osFloat {
+  from { transform: translateY(-5px); }
+  to { transform: translateY(5px); }
+}
+@keyframes pan {
+  from { object-position: 0% 50%; }
+  to { object-position: 100% 50%; }
+}
+
 /* ——— Reduced motion ——— */
 /* ——— Chooser: letter-by-letter roll into the accent colour ——— */
 .roll-char {
@@ -308,6 +354,9 @@ body {
   .marquee-track,
   .scroll-bounce,
   .leader-sweep,
+  .pebble,
+  .pan,
+  .os-float,
   .grain {
     animation: none !important;
   }

@@ -37,6 +37,7 @@ export const skills = {
   tools: ["CapCut", "DaVinci Resolve", "After Effects", "Premiere Pro"],
   styles: [
     "Short-form & social",
+    "Content creation",
     "Ads & promos",
     "Podcasts & talking heads",
     "Corporate & brand films",

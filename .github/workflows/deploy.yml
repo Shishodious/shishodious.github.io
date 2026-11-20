@@ -46,7 +46,6 @@ jobs:
         run: npm run build
         env:
           VITE_SHOW_VIDEO: ${{ vars.VITE_SHOW_VIDEO }}
-          VITE_SHOW_CONTENT: ${{ vars.VITE_SHOW_CONTENT }}
           VITE_SHOW_BRAND: ${{ vars.VITE_SHOW_BRAND }}
           VITE_SHOW_APPS: ${{ vars.VITE_SHOW_APPS }}
 
