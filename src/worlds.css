@@ -65,18 +65,6 @@
   background: rgb(var(--elev) / 0.88);
 }
 
-/* Content Creation — warm and social: aubergine night, blush highlights */
-[data-world="content"] {
-  --bg: 22 15 20;
-  --elev: 33 23 30;
-  --ink: 246 233 228;
-  --muted: 160 138 148;
-  --accent: 255 122 168;
-  --theme: #160f14;
-  --glow: 0.42;
-  color-scheme: dark;
-}
-
 /* Brand Websites — light paper, ink black, A24 red */
 [data-world="brand"] {
   --bg: 239 237 233;
