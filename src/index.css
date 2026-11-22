@@ -285,22 +285,33 @@ body {
   animation: leaderSweep 4s linear infinite;
 }
 
-/* ——— Chooser: the ring of service titles around the centre pebble ——— */
-.pebble {
-  border-radius: 47% 53% 44% 56% / 36% 38% 62% 64%;
-  animation: pebbleMorph 14s ease-in-out infinite alternate;
+/* ——— Home: the service index and its 3D preview card ——— */
+/* The active service's idle timer, drawn along the top of its row */
+.row-progress {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 100%;
+  height: 1px;
+  transform-origin: left;
+  background: rgb(var(--accent));
+  animation: rowProgress linear forwards;
 }
-@keyframes pebbleMorph {
-  50% { border-radius: 53% 47% 55% 45% / 40% 33% 67% 60%; }
-  100% { border-radius: 45% 55% 48% 52% / 33% 41% 59% 67%; }
+@keyframes rowProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
-/* --fill runs 1 (front of the ring, solid) to 0 (sides, outline only) */
-.ring-title {
-  color: rgb(var(--ink) / var(--fill, 1));
-  -webkit-text-stroke: 1.5px rgb(var(--ink) / calc(0.45 + var(--fill, 1) * 0.55));
+.card-float {
+  animation: cardFloat 7s ease-in-out infinite alternate;
 }
-.ring-door {
-  opacity: var(--fill, 1);
+@keyframes cardFloat {
+  from { transform: translateY(-7px); }
+  to { transform: translateY(7px); }
+}
+/* Light caught where the pointer is (--mx/--my set by the Chooser) */
+.card-glare {
+  background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / 0.22), transparent 45%);
+  mix-blend-mode: soft-light;
 }
 .pan {
   animation: pan 7s ease-in-out infinite alternate;
@@ -322,7 +333,7 @@ body {
 }
 
 /* ——— Reduced motion ——— */
-/* ——— Chooser: letter-by-letter roll into the accent colour ——— */
+/* ——— Home: letter-by-letter roll into the accent colour ——— */
 .roll-char {
   display: inline-block;
   position: relative;
@@ -354,7 +365,8 @@ body {
   .marquee-track,
   .scroll-bounce,
   .leader-sweep,
-  .pebble,
+  .row-progress,
+  .card-float,
   .pan,
   .os-float,
   .grain {

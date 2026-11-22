@@ -1,4 +1,4 @@
-import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { HiOutlineArrowUpRight, HiOutlineSpeakerWave, HiOutlineSpeakerXMark } from "react-icons/hi2";
 import LazySection from "../components/LazySection";
@@ -11,8 +11,8 @@ import { setPageMeta } from "../services/meta";
 
 const Contact = lazy(() => import("../components/Contact"));
 
-// What each door shows inside the pebble. Anything without an entry here gets
-// the type specimen, so a newly enabled service still has something to show.
+// What each service shows on the preview card. Anything without an entry here
+// gets the type specimen, so a newly enabled service still has something to show.
 const SHOWCASE = {
   video: { video: videoHero.reel.src, poster: videoHero.reel.poster },
   apps: { board: AppsOS },
@@ -20,19 +20,16 @@ const SHOWCASE = {
 };
 
 const COUNT = visibleServices.length;
-const SPACING = 56; // degrees between neighbouring titles on the ring
+const ADVANCE_MS = 6500; // idle time on each service before the preview moves on
 const mod = (i) => ((i % COUNT) + COUNT) % COUNT;
-// Shortest signed distance around the ring, in [-COUNT/2, COUNT/2).
+// Shortest signed distance between two services, in [-COUNT/2, COUNT/2).
 const wrap = (d) => mod(d + COUNT / 2) - COUNT / 2;
-// "Apps & Products" -> ["Apps &", "Products"]: the last word gets its own line.
-const titleLines = (name) => {
-  const words = name.split(" ");
-  return [words.slice(0, -1).join(" "), words.at(-1)].filter(Boolean);
-};
+const pad = (n) => String(n).padStart(2, "0");
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-/** The pebble's video: plays only while its door is in front and on screen. */
+/** The reel: plays only while its service is selected and the hero is on screen. */
 const VideoShow = ({ show, on, visible, videoRef }) => {
   useEffect(() => {
     const video = videoRef.current;
@@ -61,6 +58,15 @@ const VideoShow = ({ show, on, visible, videoRef }) => {
       className="absolute inset-0 w-full h-full object-cover"
     />
   );
+};
+
+/** VideoShow, plus handing its element to the ambient glow. */
+const VideoShowRegistered = ({ register, ...props }) => {
+  const { videoRef } = props;
+  useEffect(() => {
+    register(() => videoRef.current);
+  }, [register, videoRef]);
+  return <VideoShow {...props} />;
 };
 
 /** Case-study screenshots, panned slowly across one at a time. */
@@ -120,12 +126,25 @@ const Specimen = ({ register }) => {
   );
 };
 
+/** A name whose letters roll up into the accent colour while `on` (see .roll-char). */
+const RollName = ({ text, on }) => (
+  <span data-on={on} aria-hidden="true" className="block whitespace-nowrap">
+    {[...text].map((ch, i) => {
+      const glyph = ch === " " ? " " : ch;
+      return (
+        <span key={i} className="roll-char" style={{ "--i": i }}>
+          <span className="roll-a">{glyph}</span>
+          <span className="roll-b">{glyph}</span>
+        </span>
+      );
+    })}
+  </span>
+);
+
 /**
- * The gate on "/": one door per service on a ring. The front door's name sits
- * big at the bottom with its neighbours curving away in outline; the pebble in
- * the middle plays that service's work and the backdrop glows in its colours.
- * Wheel, drag, arrow keys or a click on a side title turn the ring; clicking
- * the front title or the pebble walks into that world.
+ * The gate on "/": who this is, and the three services as a numbered index.
+ * Hovering or focusing a service previews its work on the 3D card; clicking
+ * walks into that world. Left alone, the preview steps through the services.
  */
 const Chooser = () => {
   const [last] = useState(lastService);
@@ -135,25 +154,24 @@ const Chooser = () => {
   });
   const [visible, setVisible] = useState(true);
   const [muted, setMuted] = useState(true);
-  const [hovering, setHovering] = useState(false);
+  const [hovering, setHovering] = useState(false); // pointer over the card: shows the Enter badge
+  const [pointerIn, setPointerIn] = useState(false); // pointer over the index or card: holds the preview
+  const [focusIn, setFocusIn] = useState(false);
 
   const rootRef = useRef(null);
-  const pebbleRef = useRef(null);
+  const listRef = useRef(null);
+  const cardRef = useRef(null);
+  const tiltRef = useRef(null);
+  const swingRef = useRef(null);
   const ambientRef = useRef(null);
   const badgeRef = useRef(null);
   const videoRef = useRef(null);
-  const itemRefs = useRef([]);
-  const sources = useRef([]); // per door: () => drawable element for the ambient glow
+  const activeRef = useRef(active);
+  const sources = useRef([]); // per service: () => drawable element for the ambient glow
   const registers = useMemo(
     () => visibleServices.map((_, i) => (fn) => (sources.current[i] = fn)),
     [],
   );
-  const pos = useRef({ v: active }); // continuous ring position, tweened
-  const target = useRef(active); // where the ring is heading
-  const activeRef = useRef(active);
-  const drag = useRef(null);
-  const widest = useRef(0); // widest title, measured on resize
-  const suppressClick = useRef(false);
 
   useEffect(() => {
     setPageMeta({
@@ -164,184 +182,80 @@ const Chooser = () => {
     });
   }, []);
 
-  // Places every title on the ring and tips the pebble while it turns.
-  const layout = useCallback(() => {
-    const p = pos.current.v;
-    // Wide enough apart that a neighbour never runs into the front title.
-    const radius = Math.max(window.innerWidth * 0.52, widest.current * 0.82);
-    itemRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const d = wrap(i - p);
-      const deg = d * SPACING;
-      const rad = (deg * Math.PI) / 180;
-      const ad = Math.abs(d);
-      el.style.transform = `translate3d(calc(-50% + ${Math.sin(rad) * radius}px), 0, ${
-        (Math.cos(rad) - 1) * radius * 0.45
-      }px) rotateY(${deg}deg)`;
-      el.style.opacity = String(Math.min(1, Math.max(0, (1.45 - ad) / 0.45)));
-      el.style.setProperty("--fill", String(Math.max(0, 1 - ad * 1.6)));
-      el.style.pointerEvents = ad > 1.3 ? "none" : "auto";
-      el.style.zIndex = String(10 - Math.round(ad * 4));
-    });
-    const turn = Math.sin((p - Math.floor(p)) * Math.PI);
-    if (pebbleRef.current) {
-      pebbleRef.current.style.transform = `rotateY(${turn * 34}deg) scale(${1 - turn * 0.07})`;
-    }
-    const front = mod(Math.round(p));
-    if (front !== activeRef.current) {
-      activeRef.current = front;
-      setActive(front);
-    }
-  }, []);
-
-  const spinTo = useCallback(
-    (to) => {
-      target.current = to;
-      gsap.to(pos.current, {
-        v: to,
-        duration: reducedMotion() ? 0 : 1.1,
-        ease: "power3.out",
-        overwrite: true,
-        onUpdate: layout,
-      });
-    },
-    [layout],
-  );
-
-  // Turn to door `i` the short way round.
-  const goTo = useCallback(
-    (i) => spinTo(target.current + wrap(i - mod(target.current))),
-    [spinTo],
-  );
-
+  // A change of service swings the card round from the side it came from.
   useEffect(() => {
-    const measure = () => {
-      widest.current = Math.max(0, ...itemRefs.current.map((el) => el?.offsetWidth ?? 0));
-      layout();
-    };
-    measure();
-    document.fonts?.ready.then(measure);
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [layout]);
+    const prev = activeRef.current;
+    activeRef.current = active;
+    if (prev === active || reducedMotion() || !swingRef.current) return;
+    const dir = Math.sign(wrap(active - prev)) || 1;
+    gsap.fromTo(
+      swingRef.current,
+      { rotateY: dir * -26, scale: 0.94 },
+      { rotateY: 0, scale: 1, duration: 1.2, ease: "expo.out", overwrite: true },
+    );
+  }, [active]);
 
-  // Arrival: titles rise, the pebble settles in.
+  // Arrival: the headline rises line by line, the index follows, the card
+  // tips up out of the floor.
   useEffect(() => {
     if (reducedMotion()) return;
     const ctx = gsap.context(() => {
-      gsap.from("[data-rise]", { yPercent: 110, duration: 1.2, ease: "power4.out", stagger: 0.06, delay: 0.2 });
-      gsap.from("[data-pebble]", { scale: 0.82, opacity: 0, duration: 1.6, ease: "power3.out" });
-      gsap.from("[data-fade]", { opacity: 0, duration: 1, delay: 0.7, stagger: 0.1 });
+      gsap.from("[data-rise]", { yPercent: 115, duration: 1.3, ease: "power4.out", stagger: 0.08, delay: 0.15 });
+      gsap.from("[data-row]", { y: 36, opacity: 0, duration: 1.1, ease: "power3.out", stagger: 0.08, delay: 0.45 });
+      gsap.from("[data-card]", {
+        y: 90,
+        rotateX: 22,
+        opacity: 0,
+        duration: 1.7,
+        ease: "expo.out",
+        delay: 0.25,
+        transformPerspective: 1400,
+        clearProps: "transform,opacity",
+      });
+      gsap.from("[data-fade]", { opacity: 0, duration: 1, delay: 0.6, stagger: 0.1 });
     }, rootRef);
     return () => ctx.revert();
   }, []);
 
-  // Pause the video and the glow once the hero has scrolled away.
+  // Pause the video, the glow and the auto-advance once the hero scrolls away.
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
     observer.observe(rootRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // The wheel turns the ring while the page sits at the top. Past the last
-  // door (or before the first) it scrolls the page as normal, so the contact
-  // footer stays reachable. A step locks out the rest of a trackpad flick.
+  // The card leans toward the pointer and catches the light where it points.
   useEffect(() => {
-    const el = rootRef.current;
-    let sum = 0;
-    let lockedUntil = 0;
-    const onWheel = (e) => {
-      if (window.scrollY > 4) return;
-      const now = performance.now();
-      if (now < lockedUntil) {
-        lockedUntil = Math.max(lockedUntil, now + 140);
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      const i = mod(target.current);
-      if ((delta > 0 && i >= COUNT - 1) || (delta < 0 && i <= 0)) {
-        sum = 0;
-        return;
-      }
-      // Stopping propagation keeps Lenis (listening on window) from scrolling.
-      e.preventDefault();
-      e.stopPropagation();
-      sum += delta;
-      if (Math.abs(sum) > 30) {
-        goTo(i + Math.sign(sum));
-        sum = 0;
-        lockedUntil = now + 650;
-      }
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, [goTo]);
-
-  // Horizontal drag (or swipe) turns the ring freely and snaps on release.
-  useEffect(() => {
+    if (!finePointer() || reducedMotion()) return;
+    const card = cardRef.current;
+    const tilt = tiltRef.current;
+    const rx = gsap.quickTo(tilt, "rotateX", { duration: 0.8, ease: "power3.out" });
+    const ry = gsap.quickTo(tilt, "rotateY", { duration: 0.8, ease: "power3.out" });
     const move = (e) => {
-      const d = drag.current;
-      if (!d || e.pointerId !== d.id) return;
-      const dx = e.clientX - d.x;
-      if (Math.abs(dx) > 6) d.moved = true;
-      if (!d.moved) return;
-      const now = performance.now();
-      d.velocity = (e.clientX - d.lastX) / Math.max(1, now - d.lastT);
-      d.lastX = e.clientX;
-      d.lastT = now;
-      pos.current.v = d.start - dx / (window.innerWidth * 0.4);
-      layout();
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      ry((x - 0.5) * 16);
+      rx((0.5 - y) * 12);
+      // Read by .card-glare inside the face
+      tilt.style.setProperty("--mx", `${x * 100}%`);
+      tilt.style.setProperty("--my", `${y * 100}%`);
     };
-    const end = (e) => {
-      const d = drag.current;
-      if (!d || e.pointerId !== d.id) return;
-      drag.current = null;
-      if (!d.moved) return;
-      suppressClick.current = true;
-      setTimeout(() => (suppressClick.current = false), 0);
-      const fling = Math.max(-0.45, Math.min(0.45, -d.velocity * 0.35));
-      spinTo(Math.round(pos.current.v + fling));
+    const leave = () => {
+      rx(0);
+      ry(0);
     };
-    window.addEventListener("pointermove", move, { passive: true });
-    window.addEventListener("pointerup", end);
-    window.addEventListener("pointercancel", end);
+    card.addEventListener("pointermove", move, { passive: true });
+    card.addEventListener("pointerleave", leave);
     return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", end);
-      window.removeEventListener("pointercancel", end);
+      card.removeEventListener("pointermove", move);
+      card.removeEventListener("pointerleave", leave);
     };
-  }, [layout, spinTo]);
+  }, []);
 
-  const onPointerDown = (e) => {
-    if (e.button !== 0) return;
-    gsap.killTweensOf(pos.current);
-    drag.current = {
-      id: e.pointerId,
-      x: e.clientX,
-      lastX: e.clientX,
-      lastT: performance.now(),
-      start: pos.current.v,
-      velocity: 0,
-      moved: false,
-    };
-  };
-
-  // Left/right arrows turn the ring and keep focus on the front title.
-  const onKeyDown = (e) => {
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-    e.preventDefault();
-    const next = mod(target.current + (e.key === "ArrowRight" ? 1 : -1));
-    goTo(next);
-    if (rootRef.current.contains(document.activeElement)) {
-      itemRefs.current[next]?.querySelector("a")?.focus({ preventScroll: true });
-    }
-  };
-
-  // The backdrop: a tiny canvas fed from whatever the pebble shows, blurred
-  // huge in CSS. Each frame is laid over the last at low opacity, so a change
-  // of door crossfades on its own.
+  // The backdrop: a tiny canvas fed from whatever the card shows, blurred huge
+  // in CSS. Each frame is laid over the last at low opacity, so a change of
+  // service crossfades on its own.
   useEffect(() => {
     if (!visible) return;
     const canvas = ambientRef.current;
@@ -362,10 +276,10 @@ const Chooser = () => {
     return () => cancelAnimationFrame(frame);
   }, [visible]);
 
-  // "Enter" badge trails the pointer over the pebble or front title (mouse only).
+  // "Enter" badge trails the pointer over the card (mouse only).
   useEffect(() => {
     const badge = badgeRef.current;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (!finePointer()) return;
     const x = gsap.quickTo(badge, "x", { duration: 0.45, ease: "power3.out" });
     const y = gsap.quickTo(badge, "y", { duration: 0.45, ease: "power3.out" });
     const move = (e) => {
@@ -390,174 +304,272 @@ const Chooser = () => {
     if (!SHOWCASE[visibleServices[active].slug]?.video) setMuted(true);
   }, [active]);
 
+  // Up/down (or left/right) move through the index; focus previews as it goes.
+  const onListKeyDown = (e) => {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const links = listRef.current.querySelectorAll("a");
+    const from = [...links].indexOf(document.activeElement);
+    links[mod((from < 0 ? active : from) + step)]?.focus();
+  };
+
   const current = visibleServices[active];
   const hasVideo = Boolean(SHOWCASE[current.slug]?.video);
-  const hoverProps = {
-    onPointerEnter: (e) => e.pointerType === "mouse" && setHovering(true),
-    onPointerLeave: () => setHovering(false),
+  // The preview holds still while someone is looking at it or listening.
+  const holding = pointerIn || focusIn || !muted || !visible;
+  const holdProps = {
+    onPointerEnter: (e) => e.pointerType === "mouse" && setPointerIn(true),
+    onPointerLeave: () => setPointerIn(false),
   };
 
   return (
     <>
-      <main
-        ref={rootRef}
-        onPointerDown={onPointerDown}
-        onKeyDown={onKeyDown}
-        onClickCapture={(e) => {
-          if (suppressClick.current) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        }}
-        className="relative h-[100svh] min-h-[560px] overflow-hidden select-none touch-pan-y"
-      >
+      {/* clip, not just hidden: the scaled glow overflows, and a hidden box can
+          still be scrolled by focus or scrollIntoView, shifting the whole hero */}
+      <main ref={rootRef} className="relative min-h-[100svh] overflow-hidden supports-[overflow:clip]:overflow-clip">
         <canvas
           ref={ambientRef}
           width={48}
           height={36}
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full scale-125 blur-[60px] brightness-[0.55] saturate-[1.3]"
+          className="absolute inset-0 w-full h-full scale-125 blur-[70px] brightness-[0.5] saturate-[1.35]"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgb(var(--bg)/0.85)_100%)]" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_45%,transparent_20%,rgb(var(--bg)/0.92)_78%)]"
+        />
         {/* Ends on the plain background, which is where the footer starts */}
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-bg via-bg/60 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
 
-        <div
-          data-fade
-          className="absolute inset-x-0 top-24 md:top-28 z-20 flex items-baseline justify-between px-6 md:px-12 font-display text-sm md:text-lg tracking-[0.03em] uppercase text-muted"
-        >
-          <h1>What can I do for you?</h1>
-          <p className="hidden sm:block">Choose one — switch anytime</p>
-        </div>
+        <div className="relative z-10 mx-auto max-w-[1440px] min-h-[100svh] px-5 sm:px-6 md:px-12 pt-24 md:pt-28 pb-10 lg:pb-12 grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[auto_1fr] gap-x-10 xl:gap-x-16 content-center">
+          {/* Who, and the question */}
+          <header className="lg:col-span-7 lg:row-start-1 lg:self-end">
+            <p
+              data-fade
+              className="flex items-center gap-3 font-mono text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-muted"
+            >
+              <span className="relative flex h-2 w-2" aria-hidden="true">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping motion-reduce:animate-none" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              Open to work
+              <span className="text-ink/20">/</span>
+              <span className="text-ink/70">Priyanshu Shishodia</span>
+            </p>
 
-        {/* The pebble: that door's work, in a slowly breathing shape */}
-        <div
-          data-pebble
-          className="absolute left-1/2 top-[14svh] md:top-[12svh] -translate-x-1/2 h-[60svh] md:h-[66svh] aspect-[0.62] [perspective:1200px]"
-        >
-          <WorldLink
-            to={`/${current.slug}`}
-            tabIndex={-1}
-            aria-hidden="true"
-            draggable={false}
-            {...hoverProps}
-            className="block h-full w-full"
+            <h1 className="mt-5 md:mt-7 font-grotesk font-light tracking-[-0.04em] leading-[0.94] text-[clamp(2.75rem,5.5vw,6rem)]">
+              <span className="block overflow-hidden pb-[0.08em]">
+                <span data-rise className="block">
+                  What can I do
+                </span>
+              </span>
+              <span className="block overflow-hidden pb-[0.12em] -mt-[0.08em]">
+                <span data-rise className="block">
+                  for <em className="font-fraunces italic font-light text-accent pr-[0.04em]">you</em>?
+                </span>
+              </span>
+            </h1>
+
+            <p data-fade className="mt-3 md:mt-6 max-w-md text-sm sm:text-[15px] md:text-lg font-light leading-relaxed text-muted">
+              Edits that hold attention, brand sites that feel like the brand, and products shipped end to end. One
+              person, start to finish.
+            </p>
+          </header>
+
+          {/* The preview card: a 3D stack, tilting toward the pointer */}
+          <div
+            ref={cardRef}
+            data-card
+            className="relative mt-8 lg:mt-0 lg:col-start-8 lg:col-span-5 lg:row-start-1 lg:row-span-2 lg:self-center justify-self-center lg:justify-self-end w-[min(46vw,21svh)] sm:w-[min(54vw,30svh)] lg:w-auto lg:h-[min(calc(100svh-11rem),780px)] aspect-[0.64] [perspective:1600px]"
+            {...holdProps}
           >
-            <div
-              ref={pebbleRef}
-              className="pebble relative h-full w-full overflow-hidden bg-elev will-change-transform shadow-[0_0_140px_-30px_rgb(var(--accent)/0.55),inset_0_0_60px_rgba(255,255,255,0.08)]"
+            <div className="card-float h-full w-full [transform-style:preserve-3d]">
+              <div ref={tiltRef} className="h-full w-full [transform-style:preserve-3d] will-change-transform">
+                <div ref={swingRef} className="relative h-full w-full [transform-style:preserve-3d]">
+                  {/* The other doors, fanned behind */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-[1.75rem] md:rounded-[2.25rem] border border-ink/10 bg-elev/70 [transform:translate3d(9%,5%,-90px)_rotate(5deg)]"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-[1.75rem] md:rounded-[2.25rem] border border-ink/10 bg-elev/80 [transform:translate3d(4.5%,2.5%,-45px)_rotate(2.5deg)]"
+                  />
+
+                  <WorldLink
+                    to={`/${current.slug}`}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    draggable={false}
+                    onPointerEnter={(e) => e.pointerType === "mouse" && setHovering(true)}
+                    onPointerLeave={() => setHovering(false)}
+                    className="group/face absolute inset-0 block overflow-hidden rounded-[1.75rem] md:rounded-[2.25rem] bg-elev ring-1 ring-ink/15 shadow-[0_60px_120px_-40px_rgba(0,0,0,0.9),0_0_160px_-50px_rgb(var(--accent)/0.6)]"
+                  >
+                    {visibleServices.map((service, i) => {
+                      const show = SHOWCASE[service.slug];
+                      const on = i === active;
+                      const register = registers[i];
+                      return (
+                        <div
+                          key={service.slug}
+                          className={`absolute inset-0 transition-opacity duration-700 ${on ? "opacity-100" : "opacity-0"}`}
+                        >
+                          {show?.board ? (
+                            <show.board on={on} register={register} />
+                          ) : show?.video ? (
+                            <VideoShowRegistered
+                              show={show}
+                              on={on}
+                              visible={visible}
+                              videoRef={videoRef}
+                              register={register}
+                            />
+                          ) : show?.images?.length ? (
+                            <ImagesShow show={show} on={on} register={register} />
+                          ) : (
+                            <Specimen register={register} />
+                          )}
+                        </div>
+                      );
+                    })}
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 via-40% to-black/20"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="card-glare absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/face:opacity-100"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 p-5 md:p-7 text-white">
+                      <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/60 tabular-nums">
+                        {pad(active + 1)} / {pad(COUNT)}
+                      </p>
+                      <p
+                        key={current.slug}
+                        className="rotate-in hidden sm:block mt-2 max-w-[24ch] font-grotesk text-sm md:text-[17px] leading-snug text-white/90"
+                      >
+                        {current.tagline}
+                      </p>
+                    </div>
+                  </WorldLink>
+
+                  {/* Labels floating in front of the card, so the tilt shows its depth */}
+                  <p
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -left-3 md:-left-6 top-6 md:top-10 [transform:translateZ(70px)] rounded-full bg-black/60 backdrop-blur-md ring-1 ring-white/10 pl-2.5 pr-3.5 py-1.5 font-mono text-[9px] md:text-[10px] tracking-[0.25em] uppercase text-white flex items-center gap-2"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                    <span className="hidden sm:inline">Now showing ·</span> {current.word}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-3 md:-right-5 bottom-5 md:bottom-8 [transform:translateZ(90px)] grid place-items-center w-11 h-11 md:w-16 md:h-16 rounded-full bg-accent text-bg shadow-[0_18px_40px_-12px_rgb(var(--accent)/0.8)]"
+                  >
+                    <HiOutlineArrowUpRight size={20} />
+                  </span>
+                  <button
+                    type="button"
+                    onClick={toggleSound}
+                    disabled={!hasVideo}
+                    tabIndex={hasVideo ? 0 : -1}
+                    aria-label={muted ? `Play ${current.name} reel with sound` : `Mute ${current.name} reel`}
+                    aria-pressed={!muted}
+                    className={`absolute right-4 top-4 md:right-6 md:top-6 [transform:translateZ(60px)] w-10 h-10 md:w-11 md:h-11 grid place-items-center rounded-full bg-black/55 backdrop-blur-md ring-1 ring-white/15 text-white cursor-pointer transition-all duration-500 hover:bg-accent hover:ring-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                      hasVideo ? "opacity-100" : "opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {muted ? <HiOutlineSpeakerXMark size={17} /> : <HiOutlineSpeakerWave size={17} />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* The index: every service at once */}
+          <nav aria-label="Services" className="mt-8 lg:mt-10 lg:col-span-7 lg:row-start-2 lg:self-start">
+            <ol
+              ref={listRef}
+              onKeyDown={onListKeyDown}
+              onFocus={() => setFocusIn(true)}
+              onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setFocusIn(false)}
+              {...holdProps}
+              className="border-b border-ink/10"
             >
               {visibleServices.map((service, i) => {
-                const show = SHOWCASE[service.slug];
                 const on = i === active;
-                const register = registers[i];
                 return (
-                  <div
-                    key={service.slug}
-                    className={`absolute inset-0 transition-opacity duration-700 ${on ? "opacity-100" : "opacity-0"}`}
-                  >
-                    {show?.board ? (
-                      <show.board on={on} register={register} />
-                    ) : show?.video ? (
-                      <VideoShowRegistered
-                        show={show}
-                        on={on}
-                        visible={visible}
-                        videoRef={videoRef}
-                        register={register}
-                      />
-                    ) : show?.images?.length ? (
-                      <ImagesShow show={show} on={on} register={register} />
-                    ) : (
-                      <Specimen register={register} />
-                    )}
-                  </div>
-                );
-              })}
-              <div
-                aria-hidden="true"
-                className="pebble absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 via-35% to-transparent shadow-[inset_0_0_50px_rgba(0,0,0,0.35)]"
-              />
-            </div>
-          </WorldLink>
-        </div>
-
-        {/* The ring of titles */}
-        <div className="absolute inset-x-0 bottom-[calc(3.5rem+3svh)] md:bottom-[calc(3.75rem+4svh)] z-10 [perspective:1100px]">
-          {visibleServices.map((service, i) => {
-            const on = i === active;
-            return (
-              <div
-                key={service.slug}
-                ref={(el) => (itemRefs.current[i] = el)}
-                className="absolute left-1/2 bottom-0 will-change-transform"
-              >
-                <WorldLink
-                  to={`/${service.slug}`}
-                  draggable={false}
-                  aria-current={on ? "true" : undefined}
-                  aria-label={`${service.name}: ${service.door}`}
-                  onClick={(e) => {
-                    if (i !== activeRef.current) {
-                      e.preventDefault();
-                      goTo(i);
-                    }
-                  }}
-                  onFocus={(e) => e.currentTarget.matches(":focus-visible") && goTo(i)}
-                  {...(on ? hoverProps : {})}
-                  className="group block text-center outline-none"
-                >
-                  <span className="ring-door inline-block mb-3 md:mb-4 rounded-full bg-black/55 backdrop-blur-sm px-3 py-1.5 font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-accent whitespace-nowrap">
-                    0{i + 1} — {service.door}
-                    {last === service.slug && <span className="text-muted"> · last visited</span>}
-                  </span>
-                  <span className="ring-title block font-helvetica font-bold whitespace-nowrap leading-[0.86] tracking-[-0.04em] text-[clamp(2.3rem,min(8vw,13svh),10rem)] group-focus-visible:underline decoration-accent decoration-4 underline-offset-8">
-                    {titleLines(service.name).map((line) => (
-                      <span key={line} className="block overflow-hidden pb-[0.18em] -mb-[0.14em]">
-                        <span data-rise className="block">
-                          {line}
+                  <li key={service.slug} data-row>
+                    <WorldLink
+                      to={`/${service.slug}`}
+                      draggable={false}
+                      aria-current={on ? "true" : undefined}
+                      aria-label={`${service.name}: want to ${service.door}`}
+                      onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
+                      onFocus={() => setActive(i)}
+                      className="group relative grid grid-cols-[auto_1fr_auto] items-center gap-x-3.5 md:gap-x-8 py-3 md:py-4 border-t border-ink/10 outline-none focus-visible:bg-ink/[0.03]"
+                    >
+                      {on && COUNT > 1 && (
+                        <span
+                          key={`${service.slug}-${active}`}
+                          aria-hidden="true"
+                          className="row-progress"
+                          style={{ animationDuration: `${ADVANCE_MS}ms`, animationPlayState: holding ? "paused" : "running" }}
+                          onAnimationEnd={(e) => e.target === e.currentTarget && setActive((a) => mod(a + 1))}
+                        />
+                      )}
+                      <span
+                        className={`self-start pt-[0.6em] font-mono text-[10px] md:text-[11px] tabular-nums tracking-[0.2em] transition-colors duration-500 ${
+                          on ? "text-accent" : "text-muted"
+                        }`}
+                      >
+                        {pad(i + 1)}
+                      </span>
+                      <span className="min-w-0">
+                        <span
+                          className={`block font-grotesk font-medium tracking-[-0.035em] leading-[1.22] -my-[0.1em] text-[clamp(1.6rem,3.3vw,3.4rem)] transition-colors duration-500 ${
+                            on ? "text-ink" : "text-ink/40 group-hover:text-ink/70"
+                          }`}
+                        >
+                          <RollName text={service.name} on={on} />
+                        </span>
+                        <span className="mt-1.5 md:mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[9px] md:text-[10px] tracking-[0.14em] md:tracking-[0.22em] uppercase text-muted">
+                          Want to {service.door}
+                          {last === service.slug && (
+                            <span className="rounded-full border border-ink/15 px-2 py-0.5 text-ink/70 tracking-[0.18em]">
+                              Last visited
+                            </span>
+                          )}
                         </span>
                       </span>
-                    ))}
-                  </span>
-                </WorldLink>
-              </div>
-            );
-          })}
-        </div>
+                      <span
+                        aria-hidden="true"
+                        className={`grid place-items-center w-10 h-10 md:w-14 md:h-14 rounded-full border transition-all duration-500 ease-[cubic-bezier(0.34,1.36,0.64,1)] ${
+                          on
+                            ? "bg-ink border-ink text-bg rotate-0 scale-100"
+                            : "border-ink/15 text-ink/50 -rotate-45 scale-90 group-hover:scale-100"
+                        }`}
+                      >
+                        <HiOutlineArrowUpRight size={18} />
+                      </span>
+                    </WorldLink>
+                  </li>
+                );
+              })}
+            </ol>
 
-        {/* Bottom bar: where you are on the ring, and sound for the reel */}
-        <div
-          data-fade
-          className="absolute inset-x-0 bottom-0 z-20 flex items-end justify-between gap-6 px-6 md:px-12 pb-5 md:pb-7 font-mono text-[11px] tracking-[0.25em] uppercase text-muted"
-        >
-          <p className="tabular-nums">
-            <span className="text-ink">0{active + 1}</span> / 0{COUNT}
-          </p>
-          <p
-            key={current.slug}
-            className="rotate-in hidden md:block flex-1 max-w-md normal-case tracking-normal font-grotesk text-sm text-ink/75 text-center mx-auto"
-          >
-            {current.tagline}
-          </p>
-          <div className="flex items-center gap-4">
-            <span className="hidden sm:inline">Scroll · drag</span>
-            <button
-              type="button"
-              onClick={toggleSound}
-              disabled={!hasVideo}
-              aria-label={muted ? `Play ${current.name} reel with sound` : `Mute ${current.name} reel`}
-              aria-pressed={!muted}
-              className={`w-10 h-10 grid place-items-center rounded-full border border-ink/20 text-ink transition-all duration-500 hover:bg-accent hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                hasVideo ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
+            <p
+              data-fade
+              className="mt-5 flex items-center justify-between gap-6 font-mono text-[10px] tracking-[0.25em] uppercase text-muted"
             >
-              {muted ? <HiOutlineSpeakerXMark size={16} /> : <HiOutlineSpeakerWave size={16} />}
-            </button>
-          </div>
+              <span className="hidden md:inline">Hover to preview · Click to enter</span>
+              <span className="md:hidden">Tap a service to enter</span>
+              <span className="hidden sm:inline">Switch anytime</span>
+            </p>
+          </nav>
         </div>
 
-        {/* Trails the pointer, sitting below-right of it so it never hides the word */}
+        {/* Trails the pointer, sitting below-right of it so it never hides the work */}
         <div ref={badgeRef} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-30 hidden md:block">
           <div
             className={`translate-x-6 translate-y-6 origin-top-left w-[4.5rem] h-[4.5rem] rounded-full bg-accent text-bg flex items-center justify-center gap-1 font-mono text-[10px] tracking-[0.25em] uppercase transition-all duration-500 ease-[cubic-bezier(0.34,1.36,0.64,1)] ${
@@ -569,21 +581,12 @@ const Chooser = () => {
         </div>
       </main>
 
-      {/* Numbered on from the doors */}
+      {/* Numbered on from the services */}
       <LazySection anchorId="contact">
-        <Contact index={String(COUNT + 1).padStart(2, "0")} service={{ slug: "gate" }} />
+        <Contact index={pad(COUNT + 1)} service={{ slug: "gate" }} />
       </LazySection>
     </>
   );
-};
-
-/** VideoShow, plus handing its element to the ambient glow. */
-const VideoShowRegistered = ({ register, ...props }) => {
-  const { videoRef } = props;
-  useEffect(() => {
-    register(() => videoRef.current);
-  }, [register, videoRef]);
-  return <VideoShow {...props} />;
 };
 
 export default Chooser;
