@@ -24,11 +24,11 @@ export const about = {
   title: ["A little", "about me"],
   body: "Hi, I'm Priyanshu. I edit video that holds attention past the first second: clean cuts, considered colour, and pacing built around the story you're telling.",
   reel: {
-    id: "office-clones",
-    title: "Office Clones",
+    id: "almighty-push",
+    title: "Gym × Akatsuki",
     ratio: "16 / 9",
-    src: "/video/office-clones.mp4",
-    poster: "/video/office-clones.jpg",
+    src: "/video/almighty-push.mp4",
+    poster: "/video/almighty-push.jpg",
   },
 };
 
@@ -75,10 +75,19 @@ export const work = {
       poster: "/video/gym-car-wheel.jpg",
     },
     {
+      id: "office-clones",
+      title: "Office Clones",
+      length: "0:21",
+      ratio: "16 / 9",
+      src: "/video/office-clones.mp4",
+      poster: "/video/office-clones.jpg",
+    },
+    {
       id: "game-to-bike",
       title: "Game to Bike",
       length: "0:17",
       ratio: "16 / 9",
+      tone: "bone",
       src: "/video/game-to-bike.mp4",
       poster: "/video/game-to-bike.jpg",
     },
