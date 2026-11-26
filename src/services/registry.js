@@ -62,6 +62,7 @@ export const services = [
     word: "Video",
     door: "edit and create content?",
     tagline: "Edits and short-form content that hold attention past the first second.",
+    heroTone: "paper", // the nav takes this tone while it floats over the hero
     chapters: [
       { id: "home", eager: true, component: VideoHero, props: { hero: video.hero } },
       { id: "about", nav: "About", component: VideoAbout, props: { ...video.about, index: "02" } },

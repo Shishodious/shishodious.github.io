@@ -1,6 +1,6 @@
 /* src/index.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Quicksand:wght@400..700&family=Space+Grotesk:wght@300..700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap');
 
 /* Bootzy TM — display face for the chooser's top labels */
 @font-face {
@@ -34,6 +34,15 @@
     /* Crossfade between worlds when the service changes */
     transition: background-color 0.6s ease, color 0.6s ease;
   }
+}
+
+/* The Video page sets everything in Figtree: headings, body, the italic
+   accents and the small labels alike. Its hero opts out by naming Quicksand. */
+html[data-world="video"] body,
+html[data-world="video"] .font-grotesk,
+html[data-world="video"] .font-fraunces,
+html[data-world="video"] .font-mono {
+  font-family: "Figtree", sans-serif;
 }
 
 /* Hide main scrollbar */
@@ -285,90 +294,11 @@ body {
   animation: leaderSweep 4s linear infinite;
 }
 
-/* ——— Home: the service index and its 3D preview card ——— */
-/* The active service's idle timer, drawn along the top of its row */
-.row-progress {
-  position: absolute;
-  left: 0;
-  top: -1px;
-  width: 100%;
-  height: 1px;
-  transform-origin: left;
-  background: rgb(var(--accent));
-  animation: rowProgress linear forwards;
-}
-@keyframes rowProgress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-.card-float {
-  animation: cardFloat 7s ease-in-out infinite alternate;
-}
-@keyframes cardFloat {
-  from { transform: translateY(-7px); }
-  to { transform: translateY(7px); }
-}
-/* Light caught where the pointer is (--mx/--my set by the Chooser) */
-.card-glare {
-  background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / 0.22), transparent 45%);
-  mix-blend-mode: soft-light;
-}
-.pan {
-  animation: pan 7s ease-in-out infinite alternate;
-}
-/* Apps door widgets bob gently, and only while that door is in front */
-.os-float {
-  animation: osFloat 6s ease-in-out infinite alternate;
-}
-.os-board[data-on="false"] .os-float {
-  animation-play-state: paused;
-}
-@keyframes osFloat {
-  from { transform: translateY(-5px); }
-  to { transform: translateY(5px); }
-}
-@keyframes pan {
-  from { object-position: 0% 50%; }
-  to { object-position: 100% 50%; }
-}
-
 /* ——— Reduced motion ——— */
-/* ——— Home: letter-by-letter roll into the accent colour ——— */
-.roll-char {
-  display: inline-block;
-  position: relative;
-  /* clip vertically only, so glyph overhangs stay visible */
-  clip-path: inset(0 -25% 0 -25%);
-}
-.roll-a,
-.roll-b {
-  display: block;
-  transition: transform 0.65s cubic-bezier(0.76, 0, 0.24, 1);
-  transition-delay: calc(var(--i) * 28ms);
-}
-.roll-b {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  color: rgb(var(--accent));
-}
-[data-on="true"] > .roll-char > .roll-a,
-[data-on="true"] > .roll-char > .roll-b {
-  transform: translateY(-100%);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .roll-a,
-  .roll-b {
-    transition: none;
-  }
   .marquee-track,
   .scroll-bounce,
   .leader-sweep,
-  .row-progress,
-  .card-float,
-  .pan,
-  .os-float,
   .grain {
     animation: none !important;
   }

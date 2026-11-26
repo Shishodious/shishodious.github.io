@@ -79,6 +79,8 @@ const NavBar = ({ service }) => {
 
   return (
     <header
+      // Transparent over a light hero, so it borrows the hero's tone until it gets its own backdrop
+      data-tone={scrolled ? undefined : service?.heroTone}
       className={`fixed top-0 left-0 w-full h-[72px] px-6 md:px-12 z-50 flex items-center justify-between text-ink transition-all duration-500 ${
         scrolled
           ? "bg-bg/85 backdrop-blur-xl border-b border-line"

@@ -7,17 +7,33 @@
 // Compress first (H.264 .mp4, 1080p, a few MB per 10 s): they all ship with the
 // site, though each only downloads when its panel comes on screen.
 
+// One of the edits in public/video, by file name. `preview` is the small silent
+// loop the hero plays inline (8 s, 480px wide, in public/video/previews).
+const clip = (id, title) => ({
+  id,
+  title,
+  src: `/video/${id}.mp4`,
+  poster: `/video/${id}.jpg`,
+  preview: `/video/previews/${id}.mp4`,
+});
+
+// The opening panel: a hello with a playing reel, then a short story with a
+// clip of the work tucked in after each phrase. Strings are text, `clip`s sit inline.
 export const hero = {
-  name: "Priyanshu Shishodia",
-  word: "Portfolio",
-  role: "Video Editor",
-  reel: {
-    id: "batman",
-    title: "Batman",
-    ratio: "4 / 3",
-    src: "/video/batman.mp4",
-    poster: "/video/batman.jpg",
-  },
+  greeting: "Hi, nice to meet you. I'm Priyanshu",
+  reel: { ...clip("i-hate-creating-content", "I Hate Creating Content"), ratio: "16 / 9" },
+  story: [
+    "I got into editing through my own projects",
+    clip("game-to-bike", "Game to Bike"),
+    "and ended up falling in love with making things move.",
+    clip("office-thorfinn", "Office × Thorfinn"),
+    "These days I cut life crossovers,",
+    clip("almighty-push", "Gym × Akatsuki"),
+    "gym edits",
+    clip("gym-car-wheel", "Gym × Car Wheel"),
+    "and everything in between.",
+    clip("office-clones", "Office Clones"),
+  ],
 };
 
 export const about = {

@@ -20,16 +20,16 @@
   color-scheme: dark;
 }
 
-/* The home page — black and red, whichever option is hovered */
+/* The home page — minimal: off-white paper, near-black ink, one red accent */
 [data-world="gate"] {
-  --bg: 5 3 3;
-  --elev: 18 16 16;
-  --ink: 242 239 233;
-  --muted: 134 126 126;
-  --accent: 234 40 69;
-  --theme: #050303;
-  --glow: 0.55;
-  color-scheme: dark;
+  --bg: 245 245 245;
+  --elev: 236 236 236;
+  --ink: 22 22 22;
+  --muted: 120 120 120;
+  --accent: 220 38 54;
+  --theme: #f5f5f5;
+  --glow: 0.2;
+  color-scheme: light;
 }
 
 /* Video Editing — dark cinema: cold black, bone white, projector red */
@@ -58,6 +58,15 @@
   --ink: 242 239 233;
   --muted: 186 184 178;
   --accent: 255 104 96;
+}
+
+/* The Video hero: warm off-white paper, like a page of notes */
+[data-tone="paper"] {
+  --bg: 241 240 236;
+  --elev: 230 229 225;
+  --ink: 20 20 20;
+  --muted: 110 108 104;
+  --accent: 200 36 32;
 }
 
 /* The social rail floats over those light panels too, so it stays dark here */
