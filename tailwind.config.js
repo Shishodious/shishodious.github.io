@@ -16,6 +16,8 @@ module.exports = {
       },
       fontFamily: {
         grotesk: ['"Space Grotesk"', "sans-serif"],
+        quicksand: ["Quicksand", "sans-serif"],
+        figtree: ["Figtree", "sans-serif"],
         fraunces: ["Fraunces", "serif"],
         mono: ['"JetBrains Mono"', "monospace"],
         display: ['"Bootzy TM"', "Impact", "sans-serif"],

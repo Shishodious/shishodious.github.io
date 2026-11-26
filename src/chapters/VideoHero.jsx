@@ -1,31 +1,76 @@
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { HiOutlineArrowDown } from "react-icons/hi2";
 import { PanelNumber } from "./Panel";
 import VideoTile from "./VideoTile";
 
-// Tile width drives the gap below, so the name and word always overlap its edges.
-const TILE = "clamp(18rem, min(50vw, 62svh), 44rem)";
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/** Opening panel: a tilted video behind the name and one enormous word. */
+/**
+ * A clip set into the sentence like a word. They all loop together while the
+ * hero is on screen, from small silent previews (the full edits live further
+ * down the page), and rest on their posters otherwise.
+ */
+const Clip = ({ item, playing }) => {
+  const video = useRef(null);
+
+  useEffect(() => {
+    const v = video.current;
+    if (!v) return;
+    if (playing) {
+      // iOS only autoplays when the muted attribute itself is present
+      v.muted = true;
+      v.setAttribute("muted", "");
+      v.play().catch(() => {});
+    } else {
+      v.pause();
+    }
+  }, [playing]);
+
+  return (
+    <span
+      data-clip
+      title={item.title}
+      className="relative mx-[0.22em] inline-block h-[1.7em] w-[3em] overflow-hidden rounded-[0.32em] bg-ink/10 align-middle shadow-[0_14px_28px_-14px_rgba(0,0,0,0.45)] ring-1 ring-ink/10 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110"
+    >
+      <video
+        ref={video}
+        src={item.preview}
+        poster={item.poster}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+    </span>
+  );
+};
+
+/** Opening panel: a hello with the reel playing beside it, then the story with the work tucked in. */
 const VideoHero = ({ hero }) => {
   const ref = useRef(null);
+  const [onScreen, setOnScreen] = useState(false);
+
+  // The inline clips play while any of the hero shows; reduced motion keeps them still.
+  useEffect(() => {
+    if (reducedMotion()) return;
+    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting));
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const mm = gsap.matchMedia(ref.current);
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       gsap
-        .timeline({ defaults: { ease: "power4.out" } })
-        .from("[data-tile]", { opacity: 0, scale: 0.9, rotate: -14, duration: 1.4 })
-        .from("[data-line]", { yPercent: 110, duration: 1.1, stagger: 0.1 }, "-=1.15")
-        .from("[data-role]", { opacity: 0, duration: 0.8 }, "-=0.5");
-
-      gsap.to("[data-drift]", {
-        yPercent: -12,
-        rotate: 5,
-        ease: "none",
-        scrollTrigger: { trigger: ref.current, start: "top top", end: "bottom top", scrub: true },
-      });
+        .timeline({ defaults: { ease: "power3.out" } })
+        .from("[data-hello]", { opacity: 0, y: 20, duration: 0.9 })
+        .from("[data-tile]", { opacity: 0, scale: 0.85, rotate: -6, duration: 1.2, ease: "expo.out" }, "-=0.6")
+        // Phrases stay inline so they wrap like prose, which rules out moving them: they fade.
+        .from("[data-bit]", { opacity: 0, duration: 0.9, stagger: 0.07 }, "-=0.8")
+        .from("[data-clip]", { scale: 0, duration: 0.7, stagger: 0.08, ease: "back.out(2)", clearProps: "transform" }, "-=0.9");
     });
     return () => mm.revert();
   }, []);
@@ -33,35 +78,31 @@ const VideoHero = ({ hero }) => {
   return (
     <section
       ref={ref}
-      style={{ "--tile": TILE }}
-      className="relative min-h-[100svh] overflow-hidden flex flex-col items-center justify-center px-6 pt-24 pb-20 text-center"
+      data-tone="paper"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-bg px-6 pb-24 pt-28 text-center text-ink md:px-12"
     >
       <PanelNumber index="01" />
 
-      <div className="relative flex flex-col items-center">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[var(--tile)]">
-          <div data-drift>
-            <VideoTile data-tile item={hero.reel} ratio={hero.reel.ratio || "16 / 9"} soundAt="top-2 right-2" className="-rotate-6" />
-          </div>
-        </div>
-
-        <h1 className="relative flex flex-col items-center gap-[calc(var(--tile)*0.54)] pointer-events-none">
-          <span className="block overflow-hidden px-[0.1em] pb-[0.2em]">
-            <span data-line className="block font-grotesk font-light tracking-tight leading-none text-[clamp(2rem,6vw,5.5rem)]">
-              {hero.name}
-            </span>
-          </span>
-          <span className="block overflow-hidden">
-            <span data-line className="block font-grotesk font-light uppercase tracking-[-0.05em] leading-[0.95] text-[min(14vw,24svh)]">
-              {hero.word}
-            </span>
-          </span>
+      <div className="flex flex-wrap items-end justify-center gap-x-[0.5em] gap-y-4 font-quicksand text-[clamp(1.25rem,2vw,2rem)] font-bold tracking-[-0.01em]">
+        <h1 data-hello className="pb-[0.15em] [text-wrap:balance]">
+          {hero.greeting}
         </h1>
-
-        <p data-role className="relative mt-5 font-mono text-[11px] tracking-[0.3em] uppercase text-muted">
-          {hero.role}
-        </p>
+        <VideoTile
+          data-tile
+          item={hero.reel}
+          ratio={hero.reel.ratio}
+          soundAt="top-2 right-2"
+          className="w-[min(78vw,22rem,38svh)] rounded-2xl md:rounded-3xl"
+        />
       </div>
+
+      <p className="mt-[clamp(1.5rem,5svh,3.5rem)] max-w-[24ch] font-quicksand text-[clamp(1.5rem,min(2.7vw,4.6svh),2.9rem)] font-bold leading-[1.95] tracking-[-0.01em] md:max-w-[34ch]">
+        {hero.story.map((bit, i) => (
+          <Fragment key={i}>
+            {typeof bit === "string" ? <span data-bit>{bit}</span> : <Clip item={bit} playing={onScreen} />}{" "}
+          </Fragment>
+        ))}
+      </p>
 
       <HiOutlineArrowDown className="scroll-bounce absolute bottom-8 text-accent" size={16} aria-hidden="true" />
     </section>
