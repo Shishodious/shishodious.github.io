@@ -44,10 +44,12 @@ const Hero = () => {
         width={1228}
         height={1049}
         draggable={false}
-        className="absolute inset-x-0 bottom-0 mx-auto h-auto w-[min(112vw,32rem)] max-w-none lg:left-[4vw] lg:right-auto lg:mx-0 lg:h-[min(82svh,54vw)] lg:w-auto"
+        className="absolute inset-x-0 bottom-0 mx-auto h-auto w-[min(112vw,32rem)] max-w-none md:w-[min(88vw,42rem)] lg:left-[4vw] lg:right-auto lg:mx-0 lg:h-[min(82svh,54vw)] lg:w-auto"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col items-end px-6 pb-10 pt-28 text-right md:px-12 lg:pb-14 lg:pt-[16svh]">
+      {/* Below lg the puppet sits under the text, so the text leaves room for it
+          (the image's height at its width): short phones get a taller hero, not an overlap */}
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col items-end px-6 pb-[calc(min(112vw,32rem)*0.855+1.5rem)] pt-28 md:pb-[calc(min(88vw,42rem)*0.855+1.5rem)] text-right md:px-12 lg:pb-14 lg:pt-[16svh]">
         <h1 className="font-quicksand font-bold leading-[1.02] tracking-[-0.02em] text-[clamp(2.4rem,5.2vw,5.5rem)]">
           {HEADLINE.map((line) => (
             <span key={line} className="block overflow-hidden pb-[0.06em]">
