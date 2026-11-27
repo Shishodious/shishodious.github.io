@@ -5,6 +5,7 @@ import VideoHero from "../chapters/VideoHero";
 import * as apps from "./apps";
 import * as brand from "./brand";
 import * as video from "./video";
+import { catalogEntry } from "./catalog";
 
 // Below-the-fold chapters are code-split and mounted only when scrolled near
 // (see LazySection). Hero chapters are imported eagerly and marked `eager`.
@@ -48,21 +49,14 @@ const videoWork = [
  * all generated from this list, so adding a service is a new entry here plus
  * its chapters — nothing in the shell changes.
  *
- * - slug:     route segment and the data-world key in src/worlds.css
- * - word:     short label for the nav pill and page openers
- * - door:     the option's full label on the home page
+ * - name, word, door, tagline, heroTone: see ./catalog.js
  * - chapters: rendered top to bottom; `nav` adds the chapter to the nav pill,
  *             `eager` mounts it immediately instead of on approach, `props`
  *             is the content handed to the chapter (see ./apps.js etc.)
  */
 export const services = [
   {
-    slug: "video",
-    name: "Video Editing",
-    word: "Video",
-    door: "edit and create content?",
-    tagline: "Edits and short-form content that hold attention past the first second.",
-    heroTone: "paper", // the nav takes this tone while it floats over the hero
+    ...catalogEntry("video"),
     chapters: [
       { id: "home", eager: true, component: VideoHero, props: { hero: video.hero } },
       { id: "about", nav: "About", component: VideoAbout, props: { ...video.about, index: "02" } },
@@ -72,11 +66,7 @@ export const services = [
     ],
   },
   {
-    slug: "brand",
-    name: "Brand Websites",
-    word: "Brand",
-    door: "increase your brand's presence?",
-    tagline: "Sites that feel like the brand before anyone reads a word.",
+    ...catalogEntry("brand"),
     chapters: [
       {
         id: "home",
@@ -102,11 +92,7 @@ export const services = [
     ],
   },
   {
-    slug: "apps",
-    name: "Apps & Products",
-    word: "Products",
-    door: "develop a custom product?",
-    tagline: "Full-stack products and AI systems, from first commit to production.",
+    ...catalogEntry("apps"),
     chapters: [
       { id: "home", eager: true, component: Home },
       { id: "about", nav: "About", component: About },
