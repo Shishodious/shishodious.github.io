@@ -6,6 +6,7 @@ import LazySection from "../components/LazySection";
 import { visibleServices } from "../services/registry";
 import WorldLink from "../shell/WorldLink";
 import { setPageMeta } from "../services/meta";
+import { home } from "../services/catalog";
 import avatar from "../assets/avatar.webp";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -15,9 +16,8 @@ const Contact = lazy(() => import("../components/Contact"));
 const pad = (n) => String(n).padStart(2, "0");
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const HEADLINE = ["I create and edit.", "Your brand grows.", "Simple."];
-const STATEMENT =
-  "I edit videos that hold attention past the first second, build brand sites that feel like the brand, and ship products end to end. One person, start to finish.";
+const HEADLINE = home.headline;
+const STATEMENT = home.statement;
 
 /** Screen 1: the puppet waving on the left, a short right-aligned hello. */
 const Hero = () => {
@@ -160,12 +160,7 @@ const Services = () => (
 /** The home page on "/": hello, what I do, where to go next, then contact. */
 const Chooser = () => {
   useEffect(() => {
-    setPageMeta({
-      title: null,
-      description:
-        "Priyanshu Shishodia — video editing, content creation, brand websites and full-stack products, one person start to finish.",
-      path: "/",
-    });
+    setPageMeta({ title: null, description: home.description, path: "/" });
   }, []);
 
   return (

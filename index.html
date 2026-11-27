@@ -8,13 +8,12 @@
     <meta name="theme-color" content="#0d0c0a" />
     <meta name="robots" content="index, follow" />
 
-    <!-- This is a client-rendered SPA with no prerendering: a crawler that
-         doesn't run JS (every social-card bot — Facebook, X, LinkedIn, Slack,
-         Discord) sees exactly this one title/description/image for every
-         route. src/services/meta.js keeps the document itself (title, meta
-         description, canonical, OG/Twitter) correct per route for everyone
-         who does run JS — visitors and Googlebot's render pass. -->
-    <title>Priyanshu Shishodia — Studio</title>
+    <!-- The build writes one file per route from this template (see
+         prerender in vite.config.js and src/seo/snapshot.js), each with its
+         own title, description, canonical, Open Graph tags, JSON-LD and page
+         text. The values below are the home page's, and what the dev server
+         shows. -->
+    <title>Priyanshu Shishodia — Video Editor, Designer &amp; Developer</title>
     <meta
       name="description"
       content="Priyanshu Shishodia — video editing, content creation, brand websites and full-stack products, one person start to finish."
@@ -22,10 +21,10 @@
     <link rel="canonical" href="https://shishodious.github.io/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Priyanshu Shishodia — Studio" />
+    <meta property="og:site_name" content="Priyanshu Shishodia" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://shishodious.github.io/" />
-    <meta property="og:title" content="Priyanshu Shishodia — Studio" />
+    <meta property="og:title" content="Priyanshu Shishodia — Video Editor, Designer &amp; Developer" />
     <meta
       property="og:description"
       content="Video, content, brands and products — one person, start to finish."
@@ -36,7 +35,7 @@
     <meta property="og:image:alt" content="Priyanshu Shishodia — Video, content, brand and product work." />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Priyanshu Shishodia — Studio" />
+    <meta name="twitter:title" content="Priyanshu Shishodia — Video Editor, Designer &amp; Developer" />
     <meta
       name="twitter:description"
       content="Video, content, brands and products — one person, start to finish."
@@ -46,30 +45,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Priyanshu Shishodia",
-        "url": "https://shishodious.github.io/",
-        "jobTitle": "Video editor & full-stack developer",
-        "description": "Video editing, content creation, brand websites and full-stack products.",
-        "sameAs": [
-          "https://www.linkedin.com/in/priyanshu-shishodia",
-          "https://github.com/Shishodious"
-        ]
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Priyanshu Shishodia — Studio",
-        "url": "https://shishodious.github.io/"
-      }
-    </script>
 
+    <!-- Pre-rendered page text is for crawlers: anyone whose browser runs
+         the app sees it replaced on load, so it's hidden until then. -->
+    <style>
+      .js [data-prerender] { display: none; }
+    </style>
     <script>
+      document.documentElement.classList.add("js");
       // Pick the service's world before first paint so a deep link to a light
       // world doesn't fade in from the default dark one (see src/worlds.css).
       document.documentElement.dataset.world = location.pathname.split("/")[1] || "gate";

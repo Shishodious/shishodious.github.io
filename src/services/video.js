@@ -1,20 +1,20 @@
 // Content for the Video Editing world: a deck of numbered full-screen panels.
 // Draft copy: edit freely, the chapters only render what's here.
 //
-// Adding your videos: put the file in public/video/ and fill in the entry, e.g.
-//   { id: "reel-01", title: "Client — Campaign", src: "/video/reel-01.mp4", poster: "/video/reel-01.jpg" }
+// Adding your videos: put the file in public/media/ and fill in the entry, e.g.
+//   { id: "reel-01", title: "Client — Campaign", src: "/media/reel-01.mp4", poster: "/media/reel-01.jpg" }
 // `poster` is optional. An entry with `src: null` shows a film-leader placeholder.
 // Compress first (H.264 .mp4, 1080p, a few MB per 10 s): they all ship with the
 // site, though each only downloads when its panel comes on screen.
 
 // One of the edits in public/video, by file name. `preview` is the small silent
-// loop the hero plays inline (8 s, 480px wide, in public/video/previews).
+// loop the hero plays inline (8 s, 480px wide, in public/media/previews).
 const clip = (id, title) => ({
   id,
   title,
-  src: `/video/${id}.mp4`,
-  poster: `/video/${id}.jpg`,
-  preview: `/video/previews/${id}.mp4`,
+  src: `/media/${id}.mp4`,
+  poster: `/media/${id}.jpg`,
+  preview: `/media/previews/${id}.mp4`,
 });
 
 // The opening panel: a hello with a playing reel, then a short story with a
@@ -43,8 +43,8 @@ export const about = {
     id: "almighty-push",
     title: "Gym × Akatsuki",
     ratio: "16 / 9",
-    src: "/video/almighty-push.mp4",
-    poster: "/video/almighty-push.jpg",
+    src: "/media/almighty-push.mp4",
+    poster: "/media/almighty-push.jpg",
   },
 };
 
@@ -78,8 +78,8 @@ export const work = {
       title: "Office × Thorfinn",
       length: "0:33",
       ratio: "1920 / 824",
-      src: "/video/office-thorfinn.mp4",
-      poster: "/video/office-thorfinn.jpg",
+      src: "/media/office-thorfinn.mp4",
+      poster: "/media/office-thorfinn.jpg",
     },
     {
       id: "gym-car-wheel",
@@ -87,16 +87,16 @@ export const work = {
       length: "0:08",
       ratio: "16 / 9",
       tone: "bone",
-      src: "/video/gym-car-wheel.mp4",
-      poster: "/video/gym-car-wheel.jpg",
+      src: "/media/gym-car-wheel.mp4",
+      poster: "/media/gym-car-wheel.jpg",
     },
     {
       id: "office-clones",
       title: "Office Clones",
       length: "0:21",
       ratio: "16 / 9",
-      src: "/video/office-clones.mp4",
-      poster: "/video/office-clones.jpg",
+      src: "/media/office-clones.mp4",
+      poster: "/media/office-clones.jpg",
     },
     {
       id: "game-to-bike",
@@ -104,8 +104,8 @@ export const work = {
       length: "0:17",
       ratio: "16 / 9",
       tone: "bone",
-      src: "/video/game-to-bike.mp4",
-      poster: "/video/game-to-bike.jpg",
+      src: "/media/game-to-bike.mp4",
+      poster: "/media/game-to-bike.jpg",
     },
   ],
 };

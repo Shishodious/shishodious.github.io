@@ -1,30 +1,54 @@
 # Priyanshu Shishodia
 
-> One person doing video editing, content creation, brand websites and
-> full-stack product development, start to finish.
+> Video editor, designer and full-stack developer: short-form video and
+> content, brand websites, and full-stack and AI products, one person from
+> start to finish.
 
-Priyanshu Shishodia is a video editor and full-stack developer. The site
-is a small studio gate: one person, three services, each with its own
-work samples and contact point.
+Priyanshu Shishodia creates and edits video content and builds websites and
+software. The portfolio has three parts: video editing and content creation,
+brand websites, and apps and products. Priyanshu is a Software Engineer at
+Hypeliv and open to freelance work, collaborations and full-time roles,
+on-site or remote.
 
-## Services
+## Video editing & content creation
 
-- [Video editing & content creation](https://shishodious.github.io/video):
-  cuts, colour and pacing for short-form, ads, podcasts, corporate films and
-  documentary, plus short-form content built around a creator's voice and
-  audience — tools include CapCut, DaVinci Resolve, After Effects and
-  Premiere Pro.
-- [Brand websites](https://shishodious.github.io/brand): brand-led
-  marketing sites, from process through SEO/AEO to the finished build.
-- [Apps & products](https://shishodious.github.io/apps): full-stack web
-  products and AI systems, from first commit to production — React,
-  Node.js and modern infrastructure.
+- [Video editing](https://shishodious.github.io/video): short-form and social
+  edits, content creation, ads and promos, podcasts and talking heads,
+  corporate and brand films, documentary and music videos.
+- Style: tight cuts, considered colour, and pacing built around the story;
+  edits made to hold attention past the first second, including "life
+  crossovers" and gym edits.
+- Tools: CapCut, DaVinci Resolve, After Effects, Premiere Pro.
+
+## Brand websites
+
+- [Brand websites](https://shishodious.github.io/brand): sites that feel like
+  the brand before anyone reads a word, from brief to launch.
+- Process: listen, visual direction, design (phone first, real copy), build
+  (React and Next.js, GSAP motion, headless CMS), launch with analytics and
+  handover.
+- SEO and AEO handled end to end: technical and on-page SEO, JSON-LD schema,
+  llms.txt, AI crawler access, answer-first copy, and analytics (Search
+  Console, GA4, Tag Manager, Meta Pixel, Microsoft Clarity).
+
+## Apps & products
+
+- [Apps & products](https://shishodious.github.io/apps): full-stack web apps,
+  AI-integrated products, backend and API systems, realtime apps, and
+  automation and scraping, from first commit to production.
+- Stack: React, Next.js, Node.js, NestJS, PostgreSQL, MongoDB, Redis, AWS,
+  BullMQ, LLM APIs, Google Gemini, pgvector, TypeScript.
+- Notable work: Momentum (AI marketing engine that turns a brief into
+  on-brand images, reels and carousels and auto-publishes them) and Creator
+  Vision (AI brand detection inside TikTok and YouTube videos), both built at
+  Hypeliv.
 
 ## Contact
 
 - Email: priyanshushishodia008@gmail.com
 - LinkedIn: https://www.linkedin.com/in/priyanshu-shishodia
 - GitHub: https://github.com/Shishodious
+- Instagram: https://www.instagram.com/pryyshuu/
 
 ## Optional
 
